@@ -1,1 +1,28 @@
 <p>auth works! yeahhhh</p>
+
+<div class="form">
+    <h1> {{loginMode ? "Login" : "Register"}} </h1>
+    <hr style="width: 50%;">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" id="login-form">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" formControlName="email" class="form-control">
+            <!-- TODO: valid email == auth-service extra get-request -->
+            <div *ngIf="loginForm.controls.email.errors?.email" class="invalid-feedback"> No valid email </div>
+        </div>
+    
+        <div class="form-group">
+            <label for="password"> Password</label>
+            <input type="password" id="password" formControlName="password" class="form-control">
+        </div>
+
+        <div *ngIf="!loginMode" class="form-group">
+            <label for="password-confirm"> Confirm Password</label>
+            <input type="password" id="password_confirm" formControlName="password_confirm" class="form-control">
+            <div *ngIf="loginForm.controls.password_confirm.errors?.mustMatch" class="invalid-feedback"> Password doesn't match </div>
+        </div>
+        
+        <button class="btn btn-primary" [disabled]="loginForm.invalid"> {{loginMode ? "Login" : "Register"}}</button>
+        <small id="login-msg" class="form-text text-muted">Already have an Account? <span> <a (click)="onSwitchMode()"> Login Here</a></span> </small>
+    </form>
+</div>

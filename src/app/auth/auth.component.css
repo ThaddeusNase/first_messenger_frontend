@@ -1,0 +1,27 @@
+div.form {
+    display: block;
+    text-align: center;
+}
+form {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+h1 {
+    font-size: 150%;
+}
+
+.err-msg{
+    color: red; 
+}
+
+.invalid-feedback {
+    display: block;
+}
+#login-msg span a {
+    color: black;
+    font-weight: bold; 
+    cursor: pointer;
+}
