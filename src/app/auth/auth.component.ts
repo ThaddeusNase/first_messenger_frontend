@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder ,FormGroup, FormControl, Validators } from '@angular/forms';
 import { MustMatch } from '../shared/custom-validators';
+import {AuthResponseData} from './auth.service' 
+import { AuthService } from './auth.service';
+import { Data } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
@@ -10,8 +14,9 @@ import { MustMatch } from '../shared/custom-validators';
 export class AuthComponent implements OnInit {
 
   loginMode = false
+  isLoading = false
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private authService: AuthService ) { }
 
   loginForm: FormGroup;
   
@@ -32,16 +37,33 @@ export class AuthComponent implements OnInit {
   onSubmit() {
     // TODO: if loginForm.errors -> submit-button deaktiviert
     console.log(this.loginForm);
+    this.isLoading = true
+    const email = this.loginForm.value["email"]
+    const password = this.loginForm.value["password"]
+
+    let authRequest: Observable<AuthResponseData>
+
     if (this.loginMode) {
-      // login http post request
+      // TODO: login http post request3
+      authRequest = this.authService.login(email, password)
     } else {
       // reguister http post request
+      authRequest = this.authService.register(email, password)
     }
+
+    authRequest.subscribe(
+      (responseData: AuthResponseData) => {
+        console.log("auth Successful", responseData);
+        this.isLoading = false
+      }
+    )
+    // TODO: error handeling
   }
 
   onSwitchMode() {
     console.log("lol");
     this.loginMode = !this.loginMode
+
   }
   
 
