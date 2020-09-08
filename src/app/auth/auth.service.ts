@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
-import { tap, map } from 'rxjs/operators'
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, throwError } from 'rxjs';
+import { tap, map, catchError } from 'rxjs/operators'
 import { User } from '../shared/user.model';
 import { Router } from '@angular/router';
+
+// TODO: ----------------------------------------
+// localStorage + autologin/logout
+// error Handeling (fehler testen: LOGIN (was wenn email nicht registriert), email bereits registriert, etc. )
+// ----------------------------------------------
 
 
 export interface AuthResponseData {
@@ -20,6 +25,10 @@ export interface AuthResponseData {
 export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
+
+  // currentUser wird benötigt für weitere reuests zB Freunde/ChatPartner adden oder für Chat-funktion()nachrichten scrheiben etc
+  // allgm für funktionen für die man eingeloggt/authentifiziert sein muss
+  // dann currentUser.(pipe(take(1), exhaustMap(...))).subscripe()
   currentUser =  new BehaviorSubject<User>(null);
 
 
@@ -31,7 +40,7 @@ export class AuthService {
       // HEADER-config:
       headers: new HttpHeaders({"Content-Type": "application/json"})
     }
-    ).pipe(tap(this.handleAuthentication.bind(this)))
+    ).pipe(catchError(this.handleErrors) ,tap(this.handleAuthentication.bind(this)))
   }
 
 
@@ -41,9 +50,11 @@ export class AuthService {
         "email": email,
         "password": password
       }
-    ).pipe(tap(this.handleAuthentication.bind(this)))
+    ).pipe(catchError(this.handleErrors),tap(this.handleAuthentication.bind(this)))
   }
 
+
+  // ------ HELPER ------
   handleAuthentication(resData: AuthResponseData) {
     console.log("hanleAuthendtication executed");
     
@@ -57,8 +68,36 @@ export class AuthService {
     // TODO: localStorage.setItem("userData", JSON.stringify(newUser))
   }
 
+  private handleErrors(responseError: HttpErrorResponse) {
+    let errorMessage = "Unknown Error occoured"
 
-  
+    if (!responseError.error || !responseError.error.message) {
+      return throwError(responseError)
+    }
+
+    switch (responseError.error.message) {
+      case "EMAIL_EXISTS":
+        console.log("email already exists");
+        errorMessage = "email already exists"
+        break;
+      case "UNKNOWN_SERVER_ERROR":
+        console.log("An wild unknown Server-Error appeared (Error im Flask Backend)");
+        errorMessage = "An wild unknown Server-Error appeared"
+        break;
+      case "EMAIL_DOES_NOT_EXIST":
+        errorMessage = "Email is not registered. Click below to register";
+        break;
+      case "INCORRECT_PASSWORD":
+        errorMessage = "The password was incorrect";
+        break;         
+      default:
+        errorMessage = "Unknown Error occoured (default)"
+        console.log(responseError);
+        
+        break;
+    }
+    return throwError(errorMessage)
+  }
 
 
 }

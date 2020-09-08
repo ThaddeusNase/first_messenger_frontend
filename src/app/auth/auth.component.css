@@ -1,7 +1,12 @@
 div.form {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     display: block;
     text-align: center;
 }
+
 form {
     display: inline-block;
     margin-left: auto;
@@ -20,8 +25,38 @@ h1 {
 .invalid-feedback {
     display: block;
 }
+
 #login-msg span a {
     color: black;
     font-weight: bold; 
     cursor: pointer;
 }
+
+.errorMessageDiv {
+    position: fixed; 
+    top: 0%;
+    left: 0%;
+    transform: translate(0px, -100%); /* transform dmait transition einen effekt hat -> s. .active! */ 
+    transition: 0.5s ease-in-out;
+    height: 50px;
+    width: 100%;
+    min-height: 20px;
+    
+    display: flex;
+    align-items: center;                /* VERTICALES zentrieren: fuktioniert nur mit display: flex */
+    justify-content: center;
+
+    font-size: 1.25rem;
+    font-weight: 1.25rem;
+
+    /* color settings */
+    background: rgba(247, 27, 27, 0.6);
+    color: white;
+}
+
+.errorMessageDiv.active {
+    transform: translate(0px, 0px);
+}
+
+
+

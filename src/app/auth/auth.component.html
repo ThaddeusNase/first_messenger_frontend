@@ -1,4 +1,9 @@
-<p>auth works! yeahhhh</p>
+<!-- <p *ngIf="errorMsg"> Error: {{errorMsg}} </p> -->
+<!-- TODO: successMessage in HomeCOmponentHtml? -->
+<div [ngClass]="{'active': errorMsg}" class="errorMessageDiv">                  <!-- *ngIf="errorMsg" -->
+    <div class="errorMessage"> {{errorMsg}} </div>
+</div>
+
 
 <div class="form">
     <h1> {{loginMode ? "Login" : "Register"}} </h1>
@@ -23,6 +28,6 @@
         </div>
         
         <button class="btn btn-primary" [disabled]="loginForm.invalid"> {{loginMode ? "Login" : "Register"}}</button>
-        <small id="login-msg" class="form-text text-muted">Already have an Account? <span> <a (click)="onSwitchMode()"> Login Here</a></span> </small>
+        <small id="login-msg" class="form-text text-muted">{{ loginMode ? "Don't have an Account?" : "Already have an Account?" }}<span> <a (click)="onSwitchMode()"> {{ loginMode ? "Register" : "Login Here"   }} </a></span> </small>
     </form>
 </div>
