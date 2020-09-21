@@ -24,7 +24,11 @@ export interface AuthResponseData {
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private router: Router) { }
+  // tokenExpirationTimer wird benötigt um timout() zu stoppen, wenn user sich manuell via button ausloggt
+  // darf auch nicht in constructor declariert werden, sonst error (iwas mit array)
+  private tokenExpirationTimer: any
+  
+  constructor(private http: HttpClient, private router: Router) { }     
 
   // currentUser wird benötigt für weitere reuests zB Freunde/ChatPartner adden oder für Chat-funktion()nachrichten scrheiben etc
   // allgm für funktionen für die man eingeloggt/authentifiziert sein muss
@@ -64,8 +68,12 @@ export class AuthService {
     
     const newUser = new User(resData.email, resData.id, resData.token, expirationDate)
     this.currentUser.next(newUser)
+    localStorage.setItem("userData", JSON.stringify(newUser))
+    // console.log("---", expirationDate.getTime() - new Date().getTime());
+    this.autologout(expirationDate.getTime() - new Date().getTime())
+    
+    
     this.router.navigate(["home"])
-    // TODO: localStorage.setItem("userData", JSON.stringify(newUser))
   }
 
   private handleErrors(responseError: HttpErrorResponse) {
@@ -93,10 +101,65 @@ export class AuthService {
       default:
         errorMessage = "Unknown Error occoured (default)"
         console.log(responseError);
-        
         break;
     }
     return throwError(errorMessage)
+  }
+
+
+  autologin() {
+
+    const userData: {
+      email: string,
+      id: number,
+      _token: string,
+      _expirationDate: string
+    } = JSON.parse(localStorage.getItem("userData"))
+
+    if (!userData) {
+      return;
+    }
+
+    else {
+      console.log("user fetched through loaclstorage");
+      const user: User = new User(userData.email, userData.id.toString(), userData._token, new Date(userData._expirationDate))
+      if (user && user.token) {
+        this.currentUser.next(user);
+        console.log(new Date());
+        console.log("remaining logintime in ms: ", new Date(userData._expirationDate).getTime() - new Date().getTime());
+        this.autologout(new Date(userData._expirationDate).getTime() - new Date().getTime()); // oder Date.now() -> static method
+      } else {
+        console.log("currentUser = null");
+        
+        this.logout()
+      } 
+    }
+    console.log(userData._expirationDate);
+    
+  }
+
+  autologout(expirationTime) {
+    // setTimeout muss in Miliseconds
+    this.tokenExpirationTimer = setTimeout(() => {      
+      this.logout()
+    },expirationTime)
+    
+    // ---- 4 testing puropose expirationTime = 4000 (Bug: RegisterForm disappeared after JWT_Token-validity expired)
+    // this.tokenExpirationTimer = setTimeout(() => {      
+    //   this.logout()
+    // },4000) 
+  }
+
+  logout() {
+    localStorage.removeItem("userData")
+    this.currentUser.next(null);
+    this.tokenExpirationTimer = null // zB timeout() in autoLogout stoppen, wenn user sich manuell via Logout Button ausloggt
+    this.router.navigate(["auth"])
+    console.log("user logged out");
+  }
+
+  isAuthenticated() {
+    return localStorage.getItem("userData") ? true : false
   }
 
 

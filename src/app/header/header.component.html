@@ -1,0 +1,12 @@
+<!-- s. https://dribbble.com/shots/10724462-Corporate-messenger -->
+<!-- Name of chat partner/group in header -> WENN chat route -->
+
+
+<div class="navbar">
+    <div class="logo"> *LOGO* </div>
+    <img (click)="onOpenChat()" src="/assets/img/chat-icons.png" alt="chat-icon" class="header-icon">
+    <div class="chat-partner-box"></div>
+
+    <button (click)="onLoginLogout(loginMode)" id="auth-btn"> {{ loginMode ? "Logout" : "Login"}} </button>
+    
+</div>

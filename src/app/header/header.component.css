@@ -1,0 +1,38 @@
+.navbar {
+    /* overflow: hidden; */
+    height: 45px;
+    position: fixed; 
+    top: 0;
+    width: 100%;
+    background: #f0f0f0f5; 
+    /* background: #303030;  */
+}
+
+.navbar #auth-btn {
+    border: None;
+    background: #FF6565;
+    color: white; 
+    position: absolute;
+    left: auto; 
+    right: 50px;
+    width: 80px;
+    border-radius: 8px;
+}
+
+.navbar .header-icon {
+    position: absolute;
+    left: 200px;
+    width: 30px;
+    height: 30px;
+}
+
+.navbar .logo {
+    font-weight: bold;
+    position: absolute;
+    left: 20px; 
+}
+
+.navbar .header-icon {
+    cursor: pointer;
+}
+

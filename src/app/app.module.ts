@@ -7,13 +7,17 @@ import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
+import { HeaderComponent } from './header/header.component';
+import { ChatComponent } from './chat/chat.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthComponent,
-    HomeComponent
+    HomeComponent,
+    HeaderComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

@@ -60,15 +60,22 @@ export class AuthComponent implements OnInit {
 
 
   onSwitchMode() {
-    console.log("lol");
-    if (this.loginForm) {
+    this.loginMode = !this.loginMode
+
+    if (this.loginMode === true) {
       this.loginForm.get(["password_confirm"]).disable()
+      console.log("password_confirm disabled");
+      
     } else {
       this.loginForm.get(["password_confirm"]).enable()
+      console.log("password_confirm enabled");
     }
-    console.log(this.loginForm);
+    // console.log(this.loginForm);
+    // console.log("---",this.loginMode);
     
-    this.loginMode = !this.loginMode
+    // this.loginMode = !this.loginMode
+    // console.log("---",this.loginMode);
+    
   }
 
 
