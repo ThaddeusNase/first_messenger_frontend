@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+// import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
 
 import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
@@ -23,7 +25,8 @@ import { ChatComponent } from './chat/chat.component';
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    // SocketIoModule.forRoot(config)
   ],
   providers: [],
   bootstrap: [AppComponent]

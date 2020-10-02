@@ -4,6 +4,7 @@ import { BehaviorSubject, throwError } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators'
 import { User } from '../shared/user.model';
 import { Router } from '@angular/router';
+import { SessionService } from './session.service';
 
 // TODO: ----------------------------------------
 // localStorage + autologin/logout
@@ -28,7 +29,7 @@ export class AuthService {
   // darf auch nicht in constructor declariert werden, sonst error (iwas mit array)
   private tokenExpirationTimer: any
   
-  constructor(private http: HttpClient, private router: Router) { }     
+  constructor(private sessionService: SessionService, private http: HttpClient, private router: Router) { }     
 
   // currentUser wird benötigt für weitere reuests zB Freunde/ChatPartner adden oder für Chat-funktion()nachrichten scrheiben etc
   // allgm für funktionen für die man eingeloggt/authentifiziert sein muss
@@ -69,18 +70,24 @@ export class AuthService {
     const newUser = new User(resData.email, resData.id, resData.token, expirationDate)
     this.currentUser.next(newUser)
     localStorage.setItem("userData", JSON.stringify(newUser))
-    // console.log("---", expirationDate.getTime() - new Date().getTime());
-    this.autologout(expirationDate.getTime() - new Date().getTime())
-    
-    
+    // this.autologout(expirationDate.getTime() - new Date().getTime())
+
+    // session config
+    this.sessionService.setupSocketConnection()
+    this.sessionService.createSession()
+
     this.router.navigate(["home"])
+
   }
 
+
+
+
   private handleErrors(responseError: HttpErrorResponse) {
-    let errorMessage = "Unknown Error occoured"
+    let errorMessage = "Unknown Error occoured (not in responseError)"
 
     if (!responseError.error || !responseError.error.message) {
-      return throwError(responseError)
+      return throwError(errorMessage)
     }
 
     switch (responseError.error.message) {
@@ -108,6 +115,7 @@ export class AuthService {
 
 
   autologin() {
+    console.log("--- autologin() executed");
 
     const userData: {
       email: string,
@@ -125,20 +133,20 @@ export class AuthService {
       const user: User = new User(userData.email, userData.id.toString(), userData._token, new Date(userData._expirationDate))
       if (user && user.token) {
         this.currentUser.next(user);
-        console.log(new Date());
-        console.log("remaining logintime in ms: ", new Date(userData._expirationDate).getTime() - new Date().getTime());
         this.autologout(new Date(userData._expirationDate).getTime() - new Date().getTime()); // oder Date.now() -> static method
       } else {
         console.log("currentUser = null");
-        
         this.logout()
+        console.log("user invalid");
+        
       } 
     }
-    console.log(userData._expirationDate);
     
   }
 
   autologout(expirationTime) {
+    console.log("--- logout executed");
+    
     // setTimeout muss in Miliseconds
     this.tokenExpirationTimer = setTimeout(() => {      
       this.logout()
@@ -151,8 +159,14 @@ export class AuthService {
   }
 
   logout() {
+    let localStorageUser = JSON.parse(localStorage.getItem("userData"))
+    console.log("localSotrageUser: ",localStorageUser);
+    
+
     localStorage.removeItem("userData")
     this.currentUser.next(null);
+    this.sessionService.deleteSession(localStorageUser.id)
+    
     this.tokenExpirationTimer = null // zB timeout() in autoLogout stoppen, wenn user sich manuell via Logout Button ausloggt
     this.router.navigate(["auth"])
     console.log("user logged out");
@@ -161,6 +175,15 @@ export class AuthService {
   isAuthenticated() {
     return localStorage.getItem("userData") ? true : false
   }
+
+
+
+
+
+
+
+
+
 
 
 }

@@ -1,0 +1,7 @@
+.router-outlet-div {
+    /* background-color: salmon; */
+    position: relative;
+    top: 60px;
+    left: 25px;
+}
+

@@ -4,6 +4,7 @@ export class User {
         public id: string,
         private _token: string,
         private _expirationDate: Date
+        // TODO: private session_id: string
     ) {}
 
     get token() {
