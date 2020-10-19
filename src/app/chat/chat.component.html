@@ -1,2 +1,14 @@
-<p>chat works!</p>
-<button (click)="onCreateSession()"> Create SessionId </button>
+<!-- TODO: error Messages, custom form validator, search in contact/firends list ,current chatrroms/chatpartners -->
+
+
+<form (ngSubmit)="onSubmit()" #sendMsgForm="ngForm">
+    <label for="email">User Email</label>
+    <input type="text" ngModel name="email" id="email" required email>
+
+    <label for="msg"> Message:</label>
+    <input type="text" ngModel name="msg" id="msg" required >
+
+    <button type="submit">Send</button>
+</form>
+
+<button class="new-group-button"> *Create New Group* </button>

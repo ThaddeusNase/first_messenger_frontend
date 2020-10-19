@@ -1,50 +1,57 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Session } from 'protractor';
 import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+// import { lastValueFrom } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import * as io from 'socket.io-client';
+import { environment } from 'src/environments/environment';
 import { User } from '../shared/user.model';
 
 
-export interface LocalStorageUserData {
-    email: string, 
-    id: number,
-    _expirationDate: string, 
-    _token: string
+// TODO: alle Observables/Http Requests unsubscriben: 
+// s. https://stackoverflow.com/questions/35042929/is-it-necessary-to-unsubscribe-from-observables-created-by-http-methods
+
+
+export interface SessionResponseData {
+    sid: string, 
+    uid: number,
+    expiration_date: string,
+    session_expired: boolean
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
+    env = environment; 
 
-    socket; 
-    socketPrivate;
-    userData: {emai}
+    // socket; 
+    // socketPrivate;
+    // userData: {emai}
 
     constructor(private http: HttpClient){}
 
     // ----- SOCKET-IO CONFIG -----
     setupSocketConnection() {
-        this.socket = io("localhost:5000")                  // verwenden wenn neuer CLieint sich mit socket-server verbindet (request.sid wert wird generiert)
-        this.socketPrivate = io("localhost:5000/private")
+        
+        this.env.socket = io.connect("localhost:5000")                  // verwenden wenn neuer CLieint sich mit socket-server verbindet (request.sid wert wird generiert)
+        this.env.socketPrivate = io("localhost:5000/private")
     }
 
     // userData als Parameter, da s. this.authService.currentUser.subscribe == circular dependency!!! 
     createSession() {
         const userData = JSON.parse(localStorage.getItem("userData"))
         const jwt_token_expirationDate = userData._expirationDate
-        if (!this.socket || !this.socketPrivate) {
+        if (!this.env.socket || !this.env.socketPrivate) {
             throw new Error("wasn't able to connect to socket-server")
         }
-        this.socketPrivate.emit("email", userData.email, jwt_token_expirationDate)
+        this.env.socketPrivate.emit("email", userData.email, jwt_token_expirationDate)
     }
     
-    // TODO: getSession() http request -> dann in sessionExist() callen
-    getSession() {
-        
-    }
+    
 
+    // TODO: wird noch nicht benötigt
     deleteSession(user_id: string) {
         
         this.http.delete<string>(
@@ -55,6 +62,21 @@ export class SessionService {
             }
         )
     }
+
+    // TODO: getSession() http request -> dann in sessionExist() callen
+    getSession(user_id: number) {
+        return this.http.get<SessionResponseData>(`http://127.0.0.1:5000/session/${user_id.toString()}`
+            )// .pipe(catchError(this.handleErrors))  
+    }
+    
+
+    // check if session already exist for the user
+    // TODO: in chatSessionGuardService aufrufen
+
+    // TODO: isConnected == false (immer) da returned wird bevor this.getSession()-Observable-Wert gefethced wird
+    // stattdessen lieber mit Promise arbeiten? -> return new Promise?
+
+
 
     handleErrors(errorResponse: HttpErrorResponse) {
 
@@ -78,11 +100,9 @@ export class SessionService {
         throwError(errorMessage)
     }
 
-    // check if session already exist for the user
-    // TODO: in chatSessionGuardService
-    sessionExists() {
-        
-        return false
-    }
+
+    
+
+    
 
 }

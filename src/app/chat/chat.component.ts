@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
-import { SessionService } from '../auth/session.service';
+import { SessionResponseData, SessionService } from '../auth/session.service';
+import { MessageModel } from '../shared/message.model';
+import { User } from '../shared/user.model';
+import { UsersService } from '../shared/users.service';
 import { ChatService } from './chat.service';
 
 
@@ -11,16 +16,72 @@ import { ChatService } from './chat.service';
 })
 export class ChatComponent implements OnInit {
 
-  constructor(private sessionService: SessionService, private authService: AuthService) { }
+  constructor(
+      private sessionService: SessionService, 
+      private authService: AuthService, 
+      private chatService: ChatService,
+      private usersService: UsersService
+  ){ }
+
+  current_user: User; 
+  // TODO: contacts anlegen und in sendMessage übergeben
+  // contacts = User[]; 
+
+  // TODO: soäter noch mit reactive form kompliziertere message form -> group chats , an mehereren rooms senden etc
+  @ViewChild("sendMsgForm", {static: true}) sendMsgForm: NgForm; 
 
   ngOnInit() {
     this.authService.autologin()
     this.sessionService.setupSocketConnection()
+
+    console.log(this.sendMsgForm);
+    
+
+    this.authService.currentUser.subscribe(
+      (user: User) => {
+        this.current_user = user
+      }
+    )
   }
 
-  onCreateSession() {
-    // this.sessionService.getSession() für chat service
+  onSubmit() {
+
+    const recipientEmail = this.sendMsgForm.form.controls.email.value
+    const currentUid = +this.current_user.id
+    const deliveryDate = new Date()
+    const msgContent = this.sendMsgForm.form.controls.msg.value
+
+    const newMessage = new MessageModel(recipientEmail, currentUid, deliveryDate, msgContent)
+    console.log("---", newMessage);
+
+
+    // this.usersService.fetchUserByEmail(recipientEmail).subscribe(
+    //   (userResData)
+
+    // )
+    
+
+    if (this.sendMsgForm.valid) {
+      // TODO: fetch by uid, von kontaktlist via "contacts = User[]" (= leeres User array)
+      // this.chatService.sendMessage(newMessage, User(...))
+
+      this.chatService.sendMessage(newMessage, newMessage.recipient_email)
+
+      // this.sessionService.getSession(32).subscribe(
+      //   (resData: SessionResponseData) => {
+
+      //     console.log(resData);
+          
+      //   }
+      // )
+        
+    }
+    
+
   }
+
+
+  
 
 
 

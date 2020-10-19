@@ -145,7 +145,7 @@ export class AuthService {
   }
 
   autologout(expirationTime) {
-    console.log("--- logout executed");
+    // console.log("--- autologout executed");
     
     // setTimeout muss in Miliseconds
     this.tokenExpirationTimer = setTimeout(() => {      
@@ -165,7 +165,7 @@ export class AuthService {
 
     localStorage.removeItem("userData")
     this.currentUser.next(null);
-    this.sessionService.deleteSession(localStorageUser.id)
+    // this.sessionService.deleteSession(localStorageUser.id)
     
     this.tokenExpirationTimer = null // zB timeout() in autoLogout stoppen, wenn user sich manuell via Logout Button ausloggt
     this.router.navigate(["auth"])
