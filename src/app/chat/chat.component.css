@@ -1,0 +1,18 @@
+.chatroom-list-container {
+    height: 100%;
+    background-color: gray;
+}
+
+.chatwindow-container {
+    position: absolute;
+    top: -15px;
+    left: 90px;
+    height: 100%;
+    background-color: blueviolet;
+}
+
+.seperationline {
+    height: 100px;
+    background: black;
+    width: 1px;
+}

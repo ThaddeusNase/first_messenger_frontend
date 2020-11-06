@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+// TODO: import { MatDialogModule } from "@angular/material/dialog";
+// import { BrowserAnimationsModule } from '@angular/platform browser/animations';
 // import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 
@@ -11,6 +13,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './header/header.component';
 import { ChatComponent } from './chat/chat.component';
+import { ChatroomComponent } from './chat/chatroom-list/chatroom/chatroom.component';
+import { ChatwindowComponent } from './chat/chatwindow/chatwindow.component';
+import { ChatroomListComponent } from './chat/chatroom-list/chatroom-list.component';
+import { ChatroomDialogComponent } from './chat/chatroom-list/chatroom-dialog/chatroom-dialog.component';
 
 
 @NgModule({
@@ -19,7 +25,11 @@ import { ChatComponent } from './chat/chat.component';
     AuthComponent,
     HomeComponent,
     HeaderComponent,
-    ChatComponent
+    ChatComponent,
+    ChatroomComponent,
+    ChatwindowComponent,
+    ChatroomListComponent,
+    ChatroomDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -27,6 +37,7 @@ import { ChatComponent } from './chat/chat.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    //TODO: MatDialogModule
     // SocketIoModule.forRoot(config)
   ],
   providers: [],

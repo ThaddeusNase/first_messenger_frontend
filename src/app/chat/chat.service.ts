@@ -15,6 +15,13 @@ import { UsersService } from '../shared/users.service';
 import { UserResponseData } from '../shared/users.service'
 
 
+export interface RoomResponseData {
+    name: string, 
+    room_id: number, 
+    creation_date: string,
+    member_limit: number
+}
+
 
 @Injectable({providedIn: "root"})
 export class ChatService {
@@ -27,8 +34,18 @@ export class ChatService {
 
     env = environment;
 
-    createNewChatroom() {
-        
+    createNewChatroom(name: string, member_limit?: number) {
+        this.http.post<RoomResponseData>("http://127.0.0.1:5000/chatroom",
+            {
+                name: name,
+                member_limit: member_limit ? member_limit : null
+            }
+        ).pipe(catchError(this.handleErrors))
+    }
+
+    // TODO: 
+    getChatroom() {
+
     }
     
     // TODO: RecipientUser-Object statt recipientEmail 
@@ -50,11 +67,10 @@ export class ChatService {
                     this.sendViaWebSocket(msg)
                 } else {
                     console.log("--- sessionData: ", sessionResData);
-                    this.sendViaHttp(msg, recipient)
+                    // this.sendViaHttp(msg, recipient)
                 }
 
             }
-
         )
     }
 
@@ -66,9 +82,9 @@ export class ChatService {
         this.env.socketPrivate.emit("private_message", msg)
     }
 
-    sendViaHttp(msg) {
-        return this.http.post<>()
-    }
+    // sendViaHttp(msg) {
+    //     return this.http.post<>()
+    // }
 
     
     

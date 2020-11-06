@@ -1,7 +1,7 @@
 <!-- TODO: error Messages, custom form validator, search in contact/firends list ,current chatrroms/chatpartners -->
 
 
-<form (ngSubmit)="onSubmit()" #sendMsgForm="ngForm">
+<!-- <form (ngSubmit)="onSubmit()" #sendMsgForm="ngForm">
     <label for="email">User Email</label>
     <input type="text" ngModel name="email" id="email" required email>
 
@@ -9,6 +9,20 @@
     <input type="text" ngModel name="msg" id="msg" required >
 
     <button type="submit">Send</button>
-</form>
+</form> -->
 
-<button class="new-group-button"> *Create New Group* </button>
+
+
+
+<!-- <button class="new-group-button" (click)="onCreateNewChatroom()"> *Create New Group* </button> -->
+
+<div class="row">
+    <div class="col-md-5">
+        <app-chatroom-list></app-chatroom-list>
+    </div>
+    
+    <div class="col-md-7">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+

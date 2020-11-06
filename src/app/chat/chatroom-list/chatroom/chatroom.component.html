@@ -1,0 +1,17 @@
+<div class="chatroom-item">
+    <!-- TODO: chatroom image == entweder profilbild vom user recipient (wenn chatroom nur aus zwei leuten besteht) -->
+    <!-- oder profilebild eines gruppen chats -->
+    <div class="frame">
+        <img class="chatroom-image" src="/assets/img/avatardefault.png" alt="">
+    </div>
+    
+    <!-- TODO: wenn Message heute erhalten, dann Uhrzeit anzeigen -->
+    <!-- wenn Message vor mehr als 24 stunden erhalten, dann date anzeigen -->
+    <div class="last-msg-date">{{lastMessage.creationDate | date }}</div>  <!-- preview der message & uhrzeit der letzten nachricht --> 
+    
+    <div class="chatroom-title"> {{ chatroom.name }} </div>
+    <div class="msg-preview">
+        {{ lastMessage.content }}
+    </div>
+
+</div>

@@ -40,7 +40,7 @@ export class AuthService {
   register(email: string, password: string) {
     const userLoginData = {"email": email, "password": password}
     
-    return this.http.post<AuthResponseData>("http://127.0.0.1:5000/register_user",userLoginData, 
+    return this.http.post<AuthResponseData>("http://127.0.0.1:5000/register_user", userLoginData, 
     {
       // HEADER-config:
       headers: new HttpHeaders({"Content-Type": "application/json"})

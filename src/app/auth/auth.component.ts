@@ -75,7 +75,6 @@ export class AuthComponent implements OnInit {
     
     // this.loginMode = !this.loginMode
     // console.log("---",this.loginMode);
-    
   }
 
 

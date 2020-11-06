@@ -1,0 +1,57 @@
+.chatroom-item {
+    /* padding: 5px; */
+    
+}
+
+.frame {
+    height: 40px; /* Can be anything */
+    width: 40px; /* Can be anything */
+    position: relative;
+}
+
+.chatroom-image {
+    /* height: 40px;
+    width: 40px; */
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    
+
+}
+
+
+
+
+.chatroom-title {
+    position: absolute;
+    left: 52px;
+    top: 10px;
+    color: white;
+    font-size: 14px ;
+    font-weight: bolder ;
+
+}
+
+
+.last-msg-date {
+    position: absolute;
+    padding: 5px;
+    top: 50;
+    right: 0;
+    bottom: 0;
+    text-align: right;
+    font-size: 10px;
+}
+
+.msg-preview {
+    color: rgba(129, 129, 129, 0.733);
+    padding-top: 5px;
+    padding-left: 10px;
+}
