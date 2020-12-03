@@ -53,7 +53,7 @@ export class AuthComponent implements OnInit {
       // TODO: login http post request3
       this.authenticate(this.authService.login(email, password))
     } else {
-      // reguister http post request
+      // register http post request
       this.authenticate(this.authService.register(email, password))
     }
   }

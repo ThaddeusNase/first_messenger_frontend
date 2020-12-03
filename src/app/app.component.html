@@ -1,7 +1,10 @@
 <!-- TODO: Lösung nicht optimal, da header verschwindet, wenn auf anderer route geht zB von "/" zu "home" -->
 <!-- Logik (s. app.component.ts) nur in AuthComponent einbauen? -->
 <!-- kein singlePage Application style -->
-<app-header *ngIf="!router.url.includes('auth')"></app-header>
+<div class="header-container" *ngIf="!router.url.includes('auth')"> 
+    <app-header></app-header>
+</div>
+
 <div [ngClass]="{'router-outlet-div': !router.url.includes('auth')}">
     <router-outlet></router-outlet>
 </div>

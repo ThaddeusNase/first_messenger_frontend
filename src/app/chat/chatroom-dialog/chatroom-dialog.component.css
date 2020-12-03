@@ -1,0 +1,89 @@
+.dialog-background {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0vh;
+    left: 0vw;
+    background-color: rgba(0, 0, 0, 0.65);
+    z-index: 50;
+}
+
+.dialog-container {
+    padding: 15px;
+    position: fixed; 
+    width: 40vw;
+    height: 40vh;
+    top: 30vh;
+    left: 30vw;
+    /* -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
+    background-color: white; 
+    box-shadow: 0 0 1em 0.5em rgb(75, 75, 75);
+    z-index: 100;
+    border-radius: 10px;
+}
+
+
+
+/* TODO: animation error, wenn zB chatroom_id nicht */
+.dialog-container.error {
+    -webkit-animation: kf_shake 0.4s 1 linear;
+    -moz-animation: kf_shake 0.4s 1 linear;
+    -o-animation: kf_shake 0.4s 1 linear;
+}
+@-webkit-keyframes kf_shake {
+    0% { -webkit-transform: translate(30px); }
+    20% { -webkit-transform: translate(-30px); }
+    40% { -webkit-transform: translate(15px); }
+    60% { -webkit-transform: translate(-15px); }
+    80% { -webkit-transform: translate(8px); }
+    100% { -webkit-transform: translate(0px); }
+}
+@-moz-keyframes kf_shake {
+    0% { -moz-transform: translate(30px); }
+    20% { -moz-transform: translate(-30px); }
+    40% { -moz-transform: translate(15px); }
+    60% { -moz-transform: translate(-15px); }
+    80% { -moz-transform: translate(8px); }
+    100% { -moz-transform: translate(0px); }
+}
+@-o-keyframes kf_shake {
+    0% { -o-transform: translate(30px); }
+    20% { -o-transform: translate(-30px); }
+    40% { -o-transform: translate(15px); }
+    60% { -o-transform: translate(-15px); }
+    80% { -o-transform: translate(8px); }
+    100% { -o-origin-transform: translate(0px); }
+}
+
+.invalid-feedback {
+    display: block;
+}
+
+.request-error-container{
+    position: fixed; 
+    top: 0%;
+    left: 0%;
+    transform: translate(0px, -100%); /* transform dmait transition einen effekt hat -> s. .active! */ 
+    transition: 0.5s ease-in-out;
+    height: 50px;
+    width: 100%;
+    min-height: 20px;
+    
+    display: flex;
+    align-items: center;                /* VERTICALES zentrieren: fuktioniert nur mit display: flex */
+    justify-content: center;
+
+    font-size: 1.25rem;
+    font-weight: 1.25rem;
+
+    /* color settings */
+    background: rgba(247, 27, 27, 0.6);
+    color: white;
+
+    z-index: 101;
+}
+
+.request-error-container.active {
+    transform: translate(0px, 0px);
+}

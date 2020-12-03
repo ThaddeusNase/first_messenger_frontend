@@ -1,41 +1,55 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Injectable, OnInit } from "@angular/core";
-import { throwError } from 'rxjs';
-import { catchError, exhaustMap, map } from 'rxjs/operators';
+import { pipe, Subject, throwError } from 'rxjs';
+import { catchError, exhaustMap, map, tap } from 'rxjs/operators';
 import * as io from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { isObject } from 'util';
 import { AuthService } from '../auth/auth.service';
 import { SessionResponseData, SessionService } from '../auth/session.service';
+import { Chatroom } from '../shared/chatroom.model';
 import { MessageModel } from '../shared/message.model';
 
 import { User } from '../shared/user.model';
 import { UsersService } from '../shared/users.service';
 import { UserResponseData } from '../shared/users.service'
 
-
+// TODO: interfaces in einer extra Datei innerhalb des chat-directory 
 export interface RoomResponseData {
-    name: string, 
-    room_id: number, 
+    name: string,
+    id: number,
     creation_date: string,
     member_limit: number
 }
 
+export interface MembershipResponseData {
+    id: number,
+    uid: number,
+    roomid: number,
+    creation_date: string
+}
 
-@Injectable({providedIn: "root"})
+export interface UserChatroomsResponseData {
+    all_user_chatrooms: RoomResponseData[]
+}
+
+
+@Injectable({ providedIn: "root" })
 export class ChatService {
 
     constructor(
-        private sessionService: SessionService, 
+        private sessionService: SessionService,
         private usersService: UsersService,
         private http: HttpClient
-    ){}
+    ) { }
 
     env = environment;
 
+    // TODO: danach join chatroom methode (http post request an membership Resource): mit admin == current user
+    // und hinzugefügte user/kontakte  
     createNewChatroom(name: string, member_limit?: number) {
-        this.http.post<RoomResponseData>("http://127.0.0.1:5000/chatroom",
+        return this.http.post<RoomResponseData>("http://127.0.0.1:5000/chatroom",
             {
                 name: name,
                 member_limit: member_limit ? member_limit : null
@@ -43,13 +57,41 @@ export class ChatService {
         ).pipe(catchError(this.handleErrors))
     }
 
+
     // TODO: 
     getChatroom() {
 
     }
-    
+
+    deleteChatroom(room_id: string) {
+        return this.http.delete("http://127.0.0.1:5000/chatroom", {
+            // WICHTIG: HttpHeaders({key, "VALUE"}) -> value MUSS EIN STRING SEIN(darf kein int etc sein)
+            headers: new HttpHeaders({ 'id': room_id })
+        }).pipe(catchError(this.handleErrors))
+    }
+
+
+
+    joinChatroom(userId: number, chatroomId: number) {
+        return this.http.post<MembershipResponseData>("http://127.0.0.1:5000/membership",
+            {
+                user_id: userId,
+                chatroom_id: chatroomId
+            }
+        ).pipe(catchError(this.handleErrors))
+    }
+
+
+
+    getAllChatrooms(userId: number) {
+        return this.http.get<UserChatroomsResponseData>("http://127.0.0.1:5000/user_chatrooms/" + userId).pipe(
+            catchError(this.handleErrors)
+        )
+    }
+
+
     // TODO: RecipientUser-Object statt recipientEmail 
-    sendMessage(msg: MessageModel, recipientEmail: string) {
+    sendMessage(msg: MessageModel, recipientEmail: string) {
         console.log(msg);
 
         // check ob partner/recipinet eine session id besitzt mit email 
@@ -58,34 +100,57 @@ export class ChatService {
             (recipient: UserResponseData) => {
                 return this.sessionService.getSession(recipient.uid)
             }
-        ), catchError(this.handleErrors)) 
-        .subscribe(
-            (sessionResData: SessionResponseData) => {
-                
-                if (sessionResData.sid && !sessionResData.session_expired ) {
-                    console.log("--- sid: ", sessionResData.sid);
-                    this.sendViaWebSocket(msg)
-                } else {
-                    console.log("--- sessionData: ", sessionResData);
-                    // this.sendViaHttp(msg, recipient)
+        ), catchError(this.handleErrors))
+            .subscribe(
+                (sessionResData: SessionResponseData) => {
+
+                    if (sessionResData.sid && !sessionResData.session_expired) {
+                        console.log("--- sid: ", sessionResData.sid);
+                        this.sendViaWebSocket(msg)
+                    } else {
+                        console.log("--- sessionData: ", sessionResData);
+                        // this.sendViaHttp(msg, recipient)
+                    }
+
                 }
-
-            }
-        )
+            )
     }
 
-    handleErrors(errorResponse: HttpErrorResponse) {
-        return throwError(errorResponse)
-    }
+
 
     sendViaWebSocket(msg) {
         this.env.socketPrivate.emit("private_message", msg)
+    }
+
+
+
+    handleErrors(errorResponse: HttpErrorResponse) {
+
+        var errorMsg = "unknown error occoured"
+        if (!errorResponse.message || !errorResponse.error.message) {
+            return throwError(errorMsg)
+        }
+
+        switch (errorResponse.error.message) {
+            case "USER_DOES_NOT_EXIST":
+                errorMsg = "the joining user doesn't exist"
+                break;
+            case "USER_ALREADY_MEMBER":
+                errorMsg = "user is already of this Group"
+                break;
+            case "UNKNOWN_SERVER_ERROR":
+                errorMsg = "unknown server error occured"
+                break;
+            case "ROOM_DOES_NOT_EXIST":
+                errorMsg = "chatroom does not exist"
+        }
+        return throwError(errorMsg)
     }
 
     // sendViaHttp(msg) {
     //     return this.http.post<>()
     // }
 
-    
-    
+
+
 }

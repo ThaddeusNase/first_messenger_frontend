@@ -1,12 +1,15 @@
-.header-container {
-    
+
+.header-container{
+    z-index: 10;
+    position: relative; 
 }
 
 .router-outlet-div {
+    z-index: 1;
     /* background-color: salmon; */
-    position: relative;
+    /* position: relative; */
     top: 60px;
     left: 25px;
-    height: 95vh;
+    /* height: 95vh; */
 }
 

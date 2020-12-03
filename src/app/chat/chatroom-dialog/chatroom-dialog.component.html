@@ -1,0 +1,19 @@
+<div class="dialog-background" (click)="onClose()"></div>
+<div class="request-error-container" [ngClass]="{'active': requestError }"> {{ requestError }} </div>
+
+<div class="dialog-container" [ngClass]="{'error': requestError}">
+  <h2>Chatgroup Name</h2>
+  <form [formGroup]="chatroomForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <input class="form-control" placeholder="Group Name" formControlName="roomName">
+      <div *ngIf="formError" class="invalid-feedback"> {{ formError }} </div>
+    </div>
+    <!-- <label>Group name</label> -->
+    <!-- bzw. cancel-btn <button type="reset" ?! -->
+      <button type="button" class="btn btn-light" (click)="onClose()" >Cancel</button>
+      <button type="submit" class="btn btn-primary"> Save </button>
+  </form>
+
+  <!-- <div *ngIf="chatroomForm.controls.roomName.errors?" class="invalid-feedback"> Group name can not be empty </div> -->
+  
+</div>

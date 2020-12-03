@@ -1,6 +1,7 @@
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute, Data } from '@angular/router';
 import { sample } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { SessionResponseData, SessionService } from '../auth/session.service';
@@ -8,7 +9,11 @@ import { Chatroom } from '../shared/chatroom.model';
 import { MessageModel } from '../shared/message.model';
 import { User } from '../shared/user.model';
 import { UsersService } from '../shared/users.service';
-import { ChatService } from './chat.service';
+import { ChatService, RoomResponseData, UserChatroomsResponseData } from './chat.service';
+// import { ChatroomDialogComponent } from './chatroom-dialog/chatroom-dialog.component';
+import { ChatroomDialogComponent } from './chatroom-dialog/chatroom-dialog.component';
+
+
 
 
 @Component({
@@ -18,44 +23,70 @@ import { ChatService } from './chat.service';
 })
 export class ChatComponent implements OnInit {
 
+  createChatroomDialogOpened = false
+
   constructor(
       private sessionService: SessionService, 
       private authService: AuthService, 
       private chatService: ChatService,
-      private usersService: UsersService
+      private usersService: UsersService,
+      private activatedRoute: ActivatedRoute
   ){ }
 
   current_user: User;
+  chatrooms: Chatroom[] = [];
    
-
   // TODO: soäter noch mit reactive form kompliziertere message form -> group chats , an mehereren rooms senden etc
   @ViewChild("sendMsgForm", {static: true}) sendMsgForm: NgForm; 
 
   ngOnInit() {
-
-    
-
-    // TODO: (auch in flask-backend implmentieren -> alle chatrooms fetchen in dem sich der currentuser befindet
-    // this.chatrooms = this.chatService.getAllChatsFor(this.current_user.id)
-
     this.authService.autologin()
     this.sessionService.setupSocketConnection()
+    this.fetchUserChatrooms();
+    
 
+    console.log("chatrooms: ",this.chatrooms);
     console.log(this.sendMsgForm);
+
     this.authService.currentUser.subscribe(
       (user: User) => {
         this.current_user = user
       }
     )
+
   }
 
 
-  onCreateNewChatroom() {
-    // TODO: chatservice function call
-      
+  private fetchUserChatrooms() {
+    var tmpChatrooms: Chatroom[] = [] 
+    // MARK: Aufpassen, da hier die Chatrooms nur vom Resolver gefetched werden -> eventuell bugs beim fetchen  der chatrooms
+    // TODO: eventuell nochmal eine neue methode wo man chatrooms DIREKT von chatService.getAllChatrooms.subscribe fetched´
+    this.activatedRoute.data.subscribe(
+      (data: Data) => {
+        this.chatrooms = []
+        const chatrooms_data = data["chatrooms"]["all_user_chatrooms"];
+
+        chatrooms_data.forEach((roomData: RoomResponseData) => {
+          const room = new Chatroom(roomData.id, new Date(roomData.creation_date), roomData.name);
+          tmpChatrooms.push(room);
+        });
+        this.chatrooms = tmpChatrooms
+      }
+    );
   }
 
+  onCreateChatroom() {
+    this.createChatroomDialogOpened = true
+  }
 
+  onCloseCreateChatroomDialog() {
+    this.createChatroomDialogOpened = false
+  }
+
+  onSaveChatroom(newChatroom: Chatroom) {
+    this.createChatroomDialogOpened = false
+    this.chatrooms.push(newChatroom)
+  }
 
   onSubmit() {
 

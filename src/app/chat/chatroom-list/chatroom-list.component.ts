@@ -1,37 +1,48 @@
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
-import { Component, OnInit } from '@angular/core';
-// TODO: import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit, Output, EventEmitter, Input, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { Chatroom } from 'src/app/shared/chatroom.model';
 import { ChatService } from '../chat.service';
-import { ChatroomDialogComponent } from './chatroom-dialog/chatroom-dialog.component';
 
 @Component({
   selector: 'app-chatroom-list',
   templateUrl: './chatroom-list.component.html',
-  styleUrls: ['./chatroom-list.component.css']
+  styleUrls: ['./chatroom-list.component.css'],
+  // changeDetection: ChangeDetectionStrategy.OnPush 
 })
 export class ChatroomListComponent implements OnInit {
   
-  chatrooms: Chatroom[];
+  // chatroomsExist: boolean = false;
+  @Input() chatrooms: Chatroom[];
+  @Output() openDialog = new EventEmitter()
 
   constructor(
     private router: Router, 
     private activatedRoute: ActivatedRoute,
     private chatService: ChatService,
-    // TODO: public dialog: MatDialog
   ) {}
 
 
   ngOnInit() {
-    const sampleChatrooms = [
-      new Chatroom(1,new Date(), "first Chatroom"),
-      new Chatroom(2,new Date(), "second Chatroom"),
-      new Chatroom(3,new Date(), "third Chatroom"),
-    ]
-    this.chatrooms = sampleChatrooms
   }
 
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log("---", changes.chatrooms);
+    // console.log("---simpleChanges: ", this.chatrooms);
+    
+
+    // check if chatrooms exist/are fetched from chat.component.ts via @Input chatrooms 
+    // if (this.chatrooms) {
+    //   this.useChatrooms(this.chatrooms)
+    // }
+  }
+
+  // useChatrooms(chatrooms: Chatroom[]) {
+  //   this.chatroomsExist = true
+    
+  // }
 
   onOpenChatwindow(i:number) {
     console.log(i," executed");
@@ -39,24 +50,9 @@ export class ChatroomListComponent implements OnInit {
     this.router.navigate([i], {relativeTo: this.activatedRoute})
   }
 
-
   onCreateChatroom() {
-    // // Create Group Dialog öffnen
-    // let dialogRef = this.dialog.open(ChatroomDialogComponent, {
-    //   height: '400px',
-    //   width: '600px',
-    // });
-
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log(`Dialog result: ${result}`); // Pizza!
-    //   // TODO: this.chatService.createNewChatroom()
-    // });
-    
-    // dialogRef.close('Pizza!');
-
-    
-
+    this.openDialog.emit()
   }
+
 
 }

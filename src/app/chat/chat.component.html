@@ -1,24 +1,10 @@
-<!-- TODO: error Messages, custom form validator, search in contact/firends list ,current chatrroms/chatpartners -->
-
-
-<!-- <form (ngSubmit)="onSubmit()" #sendMsgForm="ngForm">
-    <label for="email">User Email</label>
-    <input type="text" ngModel name="email" id="email" required email>
-
-    <label for="msg"> Message:</label>
-    <input type="text" ngModel name="msg" id="msg" required >
-
-    <button type="submit">Send</button>
-</form> -->
-
-
-
-
-<!-- <button class="new-group-button" (click)="onCreateNewChatroom()"> *Create New Group* </button> -->
-
+<!-- TODO: <chatroom-dialog [members] ; nur Kontakte übergeben (?) oder einfach via service fetchen? -->
+<app-chatroom-dialog (saveEvent)="onSaveChatroom($event)" (closeEvent)="onCloseCreateChatroomDialog()" *ngIf="createChatroomDialogOpened"></app-chatroom-dialog>
 <div class="row">
     <div class="col-md-5">
-        <app-chatroom-list></app-chatroom-list>
+      <button (click)="onCreateChatroom()"> *Create Group* </button>
+      <button> *Chat with contact* </button>
+        <app-chatroom-list [chatrooms]="chatrooms" (openDialog)=onOpenDialog()></app-chatroom-list>
     </div>
     
     <div class="col-md-7">

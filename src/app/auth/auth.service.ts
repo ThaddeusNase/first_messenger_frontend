@@ -138,7 +138,6 @@ export class AuthService {
         console.log("currentUser = null");
         this.logout()
         console.log("user invalid");
-        
       } 
     }
     
@@ -167,6 +166,10 @@ export class AuthService {
     this.currentUser.next(null);
     // this.sessionService.deleteSession(localStorageUser.id)
     
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer)
+    }
+
     this.tokenExpirationTimer = null // zB timeout() in autoLogout stoppen, wenn user sich manuell via Logout Button ausloggt
     this.router.navigate(["auth"])
     console.log("user logged out");
