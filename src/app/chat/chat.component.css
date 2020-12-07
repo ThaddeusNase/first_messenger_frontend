@@ -1,18 +1,26 @@
-.chatroom-list-container {
-    height: 100%;
-    background-color: gray;
+.chatroom-container {
+    /* top: 20vh */
+    /* left: 5vh */
+    position: fixed;
+    left: 0vw;
+    height: 100vh;
+    /* left: 30%; */
+    width: 30%;
+    padding: 20px;
+    /* background-color: gray; */
 }
 
 .chatwindow-container {
-    position: absolute;
-    top: -15px;
-    left: 90px;
-    height: 100%;
+    position: fixed;
+    /* top: 15vh; */
+    left: 30%;
+    width: 70%;
+    height: 100vh;
     background-color: blueviolet;
 }
 
-.seperationline {
+/* .seperationline {
     height: 100px;
     background: black;
     width: 1px;
-}
+} */

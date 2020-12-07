@@ -36,13 +36,11 @@ export class AuthComponent implements OnInit {
     }, {
         validators:  MustMatch("password", "password_confirm")
     })
-    console.log(this.loginForm);
   }
 
 
   onSubmit() {
     // TODO: if loginForm.errors -> submit-button deaktiviert
-    console.log(this.loginForm);
     this.isLoading = true
     const email = this.loginForm.value["email"]
     const password = this.loginForm.value["password"]
@@ -64,17 +62,10 @@ export class AuthComponent implements OnInit {
 
     if (this.loginMode === true) {
       this.loginForm.get(["password_confirm"]).disable()
-      console.log("password_confirm disabled");
       
     } else {
       this.loginForm.get(["password_confirm"]).enable()
-      console.log("password_confirm enabled");
     }
-    // console.log(this.loginForm);
-    // console.log("---",this.loginMode);
-    
-    // this.loginMode = !this.loginMode
-    // console.log("---",this.loginMode);
   }
 
 

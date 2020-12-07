@@ -1,14 +1,29 @@
 <!-- TODO: <chatroom-dialog [members] ; nur Kontakte übergeben (?) oder einfach via service fetchen? -->
-<app-chatroom-dialog (saveEvent)="onSaveChatroom($event)" (closeEvent)="onCloseCreateChatroomDialog()" *ngIf="createChatroomDialogOpened"></app-chatroom-dialog>
-<div class="row">
-    <div class="col-md-5">
-      <button (click)="onCreateChatroom()"> *Create Group* </button>
-      <button> *Chat with contact* </button>
-        <app-chatroom-list [chatrooms]="chatrooms" (openDialog)=onOpenDialog()></app-chatroom-list>
-    </div>
-    
-    <div class="col-md-7">
-      <router-outlet></router-outlet>
-    </div>
+<!-- <app-chatroom-dialog (saveEvent)="onSaveChatroom($event)" (closeEvent)="onCloseCreateChatroomDialog()" *ngIf="createChatroomDialogOpened"></app-chatroom-dialog> -->
+<!-- <div class="container">
+  <div class="row">
+      <div class="col-md-4.5">
+        <button (click)="onCreateChatroom()"> *Create Group* </button>
+        <button> *Chat with contact* </button>
+          <app-chatroom-list [chatrooms]="chatrooms" (openDialog)=onOpenDialog()></app-chatroom-list>
+      </div>
+      
+      <div class="col-md-7">
+        <router-outlet></router-outlet>
+      </div>
   </div>
+</div> -->
+
+
+<app-chatroom-dialog (saveEvent)="onSaveChatroom($event)" (closeEvent)="onCloseCreateChatroomDialog()" *ngIf="createChatroomDialogOpened"></app-chatroom-dialog>
+<div class="container">
+  <div class="chatroom-container">
+    <button (click)="onCreateChatroom()"> *Create Group* </button>
+    <button> *Chat with contact* </button>
+    <app-chatroom-list [chatrooms]="chatrooms" (openDialog)=onOpenDialog()></app-chatroom-list>
+  </div>
+  <div class="chatwindow-container">
+    <router-outlet></router-outlet>
+  </div>
+</div>
 

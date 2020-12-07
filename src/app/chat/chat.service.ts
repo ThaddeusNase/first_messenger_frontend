@@ -9,6 +9,7 @@ import { isObject } from 'util';
 import { AuthService } from '../auth/auth.service';
 import { SessionResponseData, SessionService } from '../auth/session.service';
 import { Chatroom } from '../shared/chatroom.model';
+import { MembershipModel } from '../shared/membership.model';
 import { MessageModel } from '../shared/message.model';
 
 import { User } from '../shared/user.model';
@@ -25,9 +26,13 @@ export interface RoomResponseData {
 
 export interface MembershipResponseData {
     id: number,
-    uid: number,
-    roomid: number,
-    creation_date: string
+    user_id: number,
+    chatroom_id: number,
+    joinm_date: string
+}
+
+export interface MembershipsResponseData {
+    memberships: MembershipModel[]
 }
 
 export interface UserChatroomsResponseData {
@@ -59,7 +64,13 @@ export class ChatService {
 
 
     // TODO: 
-    getChatroom() {
+    getChatroomById(room_id: string) {
+        return this.http.get<RoomResponseData>("http://127.0.0.1:5000/chatroom", 
+        {
+            // WICHTIG: HttpHeaders({key, "VALUE"}) -> value MUSS EIN STRING SEIN(darf kein int etc sein)
+            headers: new HttpHeaders({ 'id': room_id})
+        }
+        ).pipe(catchError(this.handleErrors))
 
     }
 
@@ -85,6 +96,31 @@ export class ChatService {
 
     getAllChatrooms(userId: number) {
         return this.http.get<UserChatroomsResponseData>("http://127.0.0.1:5000/user_chatrooms/" + userId).pipe(
+            catchError(this.handleErrors)
+        )
+    }
+
+
+    getAllMembershipsForRoomId(room_id: number) {
+        // returned MembershipMODEL[] array!!! kein MembershipResponseData[] array!!!
+        return this.http.get<MembershipsResponseData>("http://127.0.0.1:5000/memberships_for_room/" + room_id).pipe(
+            map(
+                (resData: MembershipsResponseData) => {
+
+                    var allMemberships: MembershipModel[] = [];
+
+                    resData.memberships.forEach(membershipData => {
+                        const membershipObj = new MembershipModel(
+                            membershipData.id,
+                            new Date(membershipData.join_date),
+                            membershipData.user_id,
+                            membershipData.chatroom_id
+                        )
+                        allMemberships.push(membershipObj)
+                    })
+                    return {"memberships": allMemberships}
+                }
+            ),
             catchError(this.handleErrors)
         )
     }

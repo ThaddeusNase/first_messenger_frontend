@@ -1,5 +1,4 @@
 
-
 <!-- TODO: *ngIf="chatroomsExist" -->
 <div class="chatroom-container" *ngFor="let room of chatrooms; index as i" (click)="onOpenChatwindow(i)">
     <app-chatroom [chatroom]="room"></app-chatroom>

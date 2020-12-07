@@ -14,6 +14,10 @@ import { ChatroomComponent } from './chat/chatroom-list/chatroom/chatroom.compon
 import { ChatwindowComponent } from './chat/chatwindow/chatwindow.component';
 import { ChatroomListComponent } from './chat/chatroom-list/chatroom-list.component';
 import { ChatroomDialogComponent } from './chat/chatroom-dialog/chatroom-dialog.component';
+import { ChatFeedComponent } from './chat/chatwindow/chat-feed/chat-feed.component';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { ScrollingModule }
 
 
 @NgModule({
@@ -26,7 +30,8 @@ import { ChatroomDialogComponent } from './chat/chatroom-dialog/chatroom-dialog.
     ChatroomComponent,
     ChatwindowComponent,
     ChatroomListComponent,
-    ChatroomDialogComponent
+    ChatroomDialogComponent,
+    ChatFeedComponent
   ],
   imports: [
     BrowserModule,
@@ -34,6 +39,7 @@ import { ChatroomDialogComponent } from './chat/chatroom-dialog/chatroom-dialog.
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     // SocketIoModule.forRoot(config)
   ],
   providers: [],

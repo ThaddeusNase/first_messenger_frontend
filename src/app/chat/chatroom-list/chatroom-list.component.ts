@@ -27,27 +27,10 @@ export class ChatroomListComponent implements OnInit {
   ngOnInit() {
   }
 
-
-  ngOnChanges(changes: SimpleChanges) {
-    console.log("---", changes.chatrooms);
-    // console.log("---simpleChanges: ", this.chatrooms);
-    
-
-    // check if chatrooms exist/are fetched from chat.component.ts via @Input chatrooms 
-    // if (this.chatrooms) {
-    //   this.useChatrooms(this.chatrooms)
-    // }
-  }
-
-  // useChatrooms(chatrooms: Chatroom[]) {
-  //   this.chatroomsExist = true
-    
-  // }
-
   onOpenChatwindow(i:number) {
-    console.log(i," executed");
-    
-    this.router.navigate([i], {relativeTo: this.activatedRoute})
+    const openedChatroom = this.chatrooms[i]
+    console.log("---openedChatroom.id: " ,openedChatroom.id);
+    this.router.navigate([openedChatroom.id], {relativeTo: this.activatedRoute})
   }
 
   onCreateChatroom() {

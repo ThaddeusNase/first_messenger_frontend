@@ -1,8 +1,22 @@
 .window-header {
-    height: 50px;
-    width: 90%;
-    
-
+    position: fixed;
+    height: 70px;
+    width: 100%;
     background-color: brown;
 
+}
+
+/* .chat-content {
+    position: fixed;
+    top: 70px;
+    bottom: 70px;
+    background-color: darkgrey;
+} */
+
+.chat-controls {
+    position: fixed;
+    width: 100%;
+    height: 70px;
+    bottom: 0vh;
+    background-color: blue;
 }

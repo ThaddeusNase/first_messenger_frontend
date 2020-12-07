@@ -7,13 +7,14 @@ import { ChatComponent } from './chat/chat.component';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { ChatwindowComponent } from './chat/chatwindow/chatwindow.component';
 import { ChatroomsResolverService } from './chat/chatrooms-resolver.service';
+import { OpenedChatroomResolverService } from './chat/chatwindow/openedChatroom-resolver.service';
 
 
 const routes: Routes = [
   {path: "auth", component: AuthComponent, canActivate: [AuthFormGuardService]},
   {path: "home", component: HomeComponent},
-  {path: "chat", component: ChatComponent, canActivate:[AuthGuardService],resolve: {chatrooms: ChatroomsResolverService} , children: [
-    {path: ":room", component: ChatwindowComponent}
+  {path: "chat", component: ChatComponent, canActivate:[AuthGuardService], resolve: {chatrooms: ChatroomsResolverService} , children: [
+    {path: ":room", component: ChatwindowComponent, resolve: {openedChatroomData: OpenedChatroomResolverService} }
   ]}
 ];
 

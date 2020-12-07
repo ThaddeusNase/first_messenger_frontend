@@ -5,7 +5,8 @@ export class Chatroom {
     constructor(
         public id: number, 
         public creationDate: Date,
-        public name: string
+        public name: string,
+        public member_limit: number
     ) {}
 
 }

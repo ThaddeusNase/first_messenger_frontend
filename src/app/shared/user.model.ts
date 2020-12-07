@@ -5,6 +5,7 @@ export class User {
         private _token: string,
         private _expirationDate: Date
         // TODO: private session_id: string
+        // TODO: "zuletzt online"-Property (oder in SessionModel)
     ) {}
 
     get token() {

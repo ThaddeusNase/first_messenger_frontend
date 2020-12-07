@@ -43,10 +43,6 @@ export class ChatComponent implements OnInit {
     this.authService.autologin()
     this.sessionService.setupSocketConnection()
     this.fetchUserChatrooms();
-    
-
-    console.log("chatrooms: ",this.chatrooms);
-    console.log(this.sendMsgForm);
 
     this.authService.currentUser.subscribe(
       (user: User) => {
@@ -67,7 +63,9 @@ export class ChatComponent implements OnInit {
         const chatrooms_data = data["chatrooms"]["all_user_chatrooms"];
 
         chatrooms_data.forEach((roomData: RoomResponseData) => {
-          const room = new Chatroom(roomData.id, new Date(roomData.creation_date), roomData.name);
+          console.log(roomData);
+          
+          const room = new Chatroom(roomData.id, new Date(roomData.creation_date), roomData.name, roomData.member_limit);
           tmpChatrooms.push(room);
         });
         this.chatrooms = tmpChatrooms

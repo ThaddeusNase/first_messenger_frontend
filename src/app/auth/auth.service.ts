@@ -36,7 +36,6 @@ export class AuthService {
   // dann currentUser.(pipe(take(1), exhaustMap(...))).subscripe()
   currentUser =  new BehaviorSubject<User>(null);
 
-
   register(email: string, password: string) {
     const userLoginData = {"email": email, "password": password}
     
@@ -144,7 +143,6 @@ export class AuthService {
   }
 
   autologout(expirationTime) {
-    // console.log("--- autologout executed");
     
     // setTimeout muss in Miliseconds
     this.tokenExpirationTimer = setTimeout(() => {      

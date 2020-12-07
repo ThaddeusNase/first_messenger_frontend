@@ -41,7 +41,6 @@ export class ChatroomDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("chatroom dialog initiated");
     
     this.chatroomForm = this.formBuilder.group({
       "roomName": ["", [Validators.required, Validators.minLength(3), Validators.maxLength(40)]],
@@ -53,7 +52,7 @@ export class ChatroomDialogComponent implements OnInit {
     // TODO: Member/Kontakte hinzufügen!  memberLimit 
     if (this.chatroomForm.invalid) {
       console.log("chatroomForm not valid");
-      console.log(this.chatroomForm);
+      // console.log(this.chatroomForm);
       this.formError = this.getChatroomFormErrors(this.chatroomForm.controls.roomName.errors)
     } else {
       this.createRoomAndJoin()
@@ -79,16 +78,14 @@ export class ChatroomDialogComponent implements OnInit {
       take(1),
       exhaustMap(
         (roomResData: RoomResponseData) => {
-        console.log("---room-id: " ,roomResData.id, "user_id: ", userData.id);
         roomData = roomResData;
-        const tmpNewChatroom = new Chatroom(roomResData.id, new Date(roomResData.creation_date), roomResData.name)
+        const tmpNewChatroom = new Chatroom(roomResData.id, new Date(roomResData.creation_date), roomResData.name, roomResData.member_limit)
         this.newChatroom = tmpNewChatroom
         return this.chatService.joinChatroom(userData.id ,roomResData.id)
         }
       )
     ).subscribe(
       (membershipResData: MembershipResponseData) => {
-        console.log(membershipResData);
         this.saveEvent.emit(this.newChatroom)
       },
       (err: string) => {
@@ -98,8 +95,6 @@ export class ChatroomDialogComponent implements OnInit {
         // TODO: error animation
         // MARK: wenn createNewCHatroom failed -> dann bereits erstellten chatroom wieder löschen
         if (roomData) {
-          console.log("---roomData: ", roomData);
-          
           this.chatService.deleteChatroom(roomData.id.toString()).subscribe(
             () => {
               console.log(`chatroom ${roomData.name} with id: ${roomData.id} deleted`);

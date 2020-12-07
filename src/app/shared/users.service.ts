@@ -10,7 +10,9 @@ import { User } from './user.model';
 export interface UserResponseData {
     email: string, 
     uid: number,
-    sid: string
+    bio: string,
+    sid?: string,
+
 }
 
 

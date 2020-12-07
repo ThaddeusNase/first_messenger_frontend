@@ -9,7 +9,7 @@ export class ChatroomsResolverService implements Resolve<UserChatroomsResponseDa
 
     constructor(private chatService: ChatService) {
     }
-
+    
     // Eventuell auch über this.chatService.currentUser.subscribe() -> bin mir nicht sicher ob autologin() VOR RESOLVER aufgerufen wird?! (-> laut console.log messages nicht)
     currentUserData: {
         email: string,
