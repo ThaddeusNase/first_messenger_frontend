@@ -1,5 +1,19 @@
 
 <!-- TODO: *ngIf="chatroomsExist" -->
-<div class="chatroom-container" *ngFor="let room of chatrooms; index as i" (click)="onOpenChatwindow(i)">
-    <app-chatroom [chatroom]="room"></app-chatroom>
-</div>
+
+
+<cdk-virtual-scroll-viewport itemSize="100">
+    <!-- *cdkVirtualFor ersetzt *ngFor funktioniert aber 1zu1 gleich
+    - cdk is keeping track of the items inside the list & which items will fit in the viewport 
+    - animate.css s. https://dev.to/angular/angular-animate-css-in-five-easy-steps-8o6 installieren
+        um zu veranschaulichen, wie die einzelnen chatroom-container in cdk-virtual-scroll-viewport in DOM gerendert werden
+        zB <div class="animated slideInRight" 
+    - in normaler Liste: <ul> <li></li> </ul> würde die Animation: slidInRight nur EINMAL für die initial page load ausgeführt werden! -->
+    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="chatroom-container"  *cdkVirtualFor="let room of chatrooms; index as i">
+        <a [routerLink]="['/chat', chatrooms[i].id]">
+            <app-chatroom [chatroom]="room"></app-chatroom>
+        </a>
+    </li>
+</cdk-virtual-scroll-viewport>
+
+

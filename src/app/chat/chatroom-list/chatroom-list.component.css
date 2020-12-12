@@ -1,5 +1,5 @@
 
-.chatroom-container {
+/* .chatroom-container {
     position: relative;
     height: 100px;
     width: 300px;
@@ -11,4 +11,53 @@
     background-color: rgb(184, 184, 184);
     border: 1px solid blue;
     border-radius: 8px;
+} */
+
+
+cdk-virtual-scroll-viewport {
+    top: 15px;
+    height: 99%;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    list-style: none;
 }
+
+cdk-virtual-scroll-viewport .chatroom-container {
+    position: relative;
+    cursor: pointer;
+    height: 100px;
+    margin: 10px;
+    /* padding: 20px; */
+    background: whitesmoke;
+
+    box-shadow: 2px 2px 3px rgba(61, 61, 61, 0.205);
+    border-radius: 8px;
+}
+
+cdk-virtual-scroll-viewport .chatroom-container.active {
+    background: rgba(90, 90, 90, 0.274);
+    
+
+}
+
+
+
+
+/* TODO scroll effect */
+/* s. https://www.youtube.com/watch?v=Ppl64MY6FFc&t=103s als SCSS file!!!*/
+/* cdk-virtual-scroll-viewport &::-webkit-scrollbar {
+    width: 1em
+}
+
+cdk-virtual-scroll-viewport &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3)
+}
+
+cdk-virtual-scroll-viewport &::-webkit-scrollbar-thumb {
+    background-color: rgb(238, 169, 79)
+} */
+

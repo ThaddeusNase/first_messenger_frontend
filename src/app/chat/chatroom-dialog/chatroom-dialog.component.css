@@ -64,7 +64,7 @@
     position: fixed; 
     top: 0%;
     left: 0%;
-    transform: translate(0px, -100%); /* transform dmait transition einen effekt hat -> s. .active! */ 
+    transform: translate(0px, -100%); /* transform damit transition einen effekt hat -> s. .active! */ 
     transition: 0.5s ease-in-out;
     height: 50px;
     width: 100%;

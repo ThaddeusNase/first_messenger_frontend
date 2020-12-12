@@ -52,7 +52,7 @@ export class ChatService {
     env = environment;
 
     // TODO: danach join chatroom methode (http post request an membership Resource): mit admin == current user
-    // und hinzugefügte user/kontakte  
+    // und hinzugefügte user/kontakte0  
     createNewChatroom(name: string, member_limit?: number) {
         return this.http.post<RoomResponseData>("http://127.0.0.1:5000/chatroom",
             {

@@ -1,12 +1,12 @@
 .chatroom-item {
-    padding: 5px;
-    margin: 10px;
     
+    /* margin: 10px; */  
 }
 
+
 .frame {
-    height: 40px; /* Can be anything */
-    width: 40px; /* Can be anything */
+    height: 60px; /* Can be anything */
+    width: 60px; /* Can be anything */
     position: relative;
 }
 
@@ -18,9 +18,9 @@
     width: auto;
     height: auto;
     position: absolute;
-    top: 0;
+    top: 35px;
     bottom: 0;
-    left: 0;
+    left: 20px;
     right: 0;
     margin: auto;
     
@@ -32,9 +32,9 @@
 
 .chatroom-title {
     position: absolute;
-    left: 52px;
-    top: 10px;
-    color: white;
+    left: 85px;
+    top: 28px;
+    color: black;
     font-size: 14px ;
     font-weight: bolder ;
 
@@ -53,6 +53,7 @@
 
 .msg-preview {
     color: rgba(129, 129, 129, 0.733);
-    padding-top: 5px;
-    padding-left: 10px;
+    position: absolute;
+    left: 85px;
+    top: 43px;
 }

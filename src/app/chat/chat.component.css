@@ -7,8 +7,10 @@
     /* left: 30%; */
     width: 30%;
     padding: 20px;
+    padding-bottom:95px ;
     /* background-color: gray; */
 }
+
 
 .chatwindow-container {
     position: fixed;

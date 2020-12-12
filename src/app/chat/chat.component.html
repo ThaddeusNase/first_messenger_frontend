@@ -20,7 +20,7 @@
   <div class="chatroom-container">
     <button (click)="onCreateChatroom()"> *Create Group* </button>
     <button> *Chat with contact* </button>
-    <app-chatroom-list [chatrooms]="chatrooms" (openDialog)=onOpenDialog()></app-chatroom-list>
+    <app-chatroom-list [chatrooms]="chatrooms"></app-chatroom-list>
   </div>
   <div class="chatwindow-container">
     <router-outlet></router-outlet>

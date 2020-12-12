@@ -56,7 +56,40 @@ export class ChatwindowComponent implements OnInit {
   }
 
   // TODO: eventuell in Resolver nach url-subscriben und entsprechenden Chatroom fetchen (via Http request)
+
+
+
   
+  onSubmit() {
+
+    // const recipientEmail = this.sendMsgForm.form.controls.email.value
+    // const currentUid = +this.current_user.id
+    // const deliveryDate = new Date()
+    // const msgContent = this.sendMsgForm.form.controls.msg.value
+
+    // const newMessage = new MessageModel(recipientEmail, currentUid, deliveryDate, msgContent)
+    // console.log("---", newMessage);
+
+    // // this.usersService.fetchUserByEmail(recipientEmail).subscribe(
+    // //   (userResData)
+
+    // // )
+    // if (this.sendMsgForm.valid) {
+    //   // TODO: fetch by uid, von kontaktlist via "contacts = User[]" (= leeres User array)
+    //   // this.chatService.sendMessage(newMessage, User(...))
+
+    //   this.chatService.sendMessage(newMessage, newMessage.recipient_email)
+
+      // this.sessionService.getSession(32).subscribe(
+      //   (resData: SessionResponseData) => {
+
+      //     console.log(resData);
+          
+      //   }
+      // )
+        
+    // }
+  }
 
   
 

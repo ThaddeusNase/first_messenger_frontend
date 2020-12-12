@@ -17,6 +17,7 @@ import { ChatroomDialogComponent } from './chat/chatroom-dialog/chatroom-dialog.
 import { ChatFeedComponent } from './chat/chatwindow/chat-feed/chat-feed.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 // import { ScrollingModule }
 
 
@@ -40,6 +41,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    ScrollingModule,
     // SocketIoModule.forRoot(config)
   ],
   providers: [],

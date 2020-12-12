@@ -82,46 +82,16 @@ export class ChatComponent implements OnInit {
   }
 
   onSaveChatroom(newChatroom: Chatroom) {
+    console.log("new Chatroom: ", newChatroom);
     this.createChatroomDialogOpened = false
-    this.chatrooms.push(newChatroom)
+    // https://stackoverflow.com/questions/55369253/cdkvirtualfor-not-rendering-new-items
+    // s. stackoverflow: chatroom muss mutated werden, damit verändertes == NEUE chatrooms[]- INSTANZ
+    // auch von *cdkVirtualFor="let room of chatrooms" übernommen werden kann
+    // this.chatroom.push(newChatroom) WÜRDE DAS chatrooms array nicht neu mutaten -> hence keine veränderungen im chatroom-list
+
+    // TODO: new chatroom creation animation (float in von links,  alle  anderen einen nach unten)
+    this.chatrooms = [newChatroom,...this.chatrooms]
   }
-
-  onSubmit() {
-
-    // const recipientEmail = this.sendMsgForm.form.controls.email.value
-    // const currentUid = +this.current_user.id
-    // const deliveryDate = new Date()
-    // const msgContent = this.sendMsgForm.form.controls.msg.value
-
-    // const newMessage = new MessageModel(recipientEmail, currentUid, deliveryDate, msgContent)
-    // console.log("---", newMessage);
-
-    // // this.usersService.fetchUserByEmail(recipientEmail).subscribe(
-    // //   (userResData)
-
-    // // )
-    // if (this.sendMsgForm.valid) {
-    //   // TODO: fetch by uid, von kontaktlist via "contacts = User[]" (= leeres User array)
-    //   // this.chatService.sendMessage(newMessage, User(...))
-
-    //   this.chatService.sendMessage(newMessage, newMessage.recipient_email)
-
-      // this.sessionService.getSession(32).subscribe(
-      //   (resData: SessionResponseData) => {
-
-      //     console.log(resData);
-          
-      //   }
-      // )
-        
-    // }
-  }
-
-  
-
-
-  
-
 
 
 
