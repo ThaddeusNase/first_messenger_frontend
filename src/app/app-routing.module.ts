@@ -13,7 +13,7 @@ import { OpenedChatroomResolverService } from './chat/chatwindow/openedChatroom-
 const routes: Routes = [
   {path: "auth", component: AuthComponent, canActivate: [AuthFormGuardService]},
   {path: "home", component: HomeComponent},
-  {path: "chat", component: ChatComponent, canActivate:[AuthGuardService], resolve: {chatrooms: ChatroomsResolverService} , children: [
+  {path: "chat", component: ChatComponent, canActivate: [AuthGuardService], resolve: {chatrooms: ChatroomsResolverService} , children: [
     {path: ":room", component: ChatwindowComponent, resolve: {openedChatroomData: OpenedChatroomResolverService} }
   ]}
 ];

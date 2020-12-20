@@ -38,7 +38,7 @@ cdk-virtual-scroll-viewport .chatroom-container {
     border-radius: 8px;
 }
 
-cdk-virtual-scroll-viewport .chatroom-container.active {
+cdk-virtual-scroll-viewport .chatroom-container.router-link-active{
     background: rgba(90, 90, 90, 0.274);
     
 

@@ -14,11 +14,8 @@ import { ChatService } from '../chat.service';
 export class ChatroomListComponent implements OnInit {
   
   // chatroomsExist: boolean = false;
-  @Input() chatrooms: Chatroom[];
-  openedChatroomId = -1
-
-
-  
+  @Input() chatrooms: Chatroom[] = [];
+  openedChatroom: Chatroom;
 
 
   constructor(
@@ -29,6 +26,19 @@ export class ChatroomListComponent implements OnInit {
 
 
   ngOnInit() {
+  }
+
+  onOpenChatroom(i) {
+    const openedChatroom = this.chatrooms[i]
+    this.openedChatroom = new Chatroom(openedChatroom.id, openedChatroom.creationDate, openedChatroom.name, openedChatroom.member_limit)
+    this.router.navigate(["chat", openedChatroom.id])
+  }
+
+  chatroomOpenedCheck(i) {
+    if (this.openedChatroom && this.chatrooms && this.chatrooms[i].id === this.openedChatroom.id) {
+      return true 
+    }
+    return false
   }
 
 }

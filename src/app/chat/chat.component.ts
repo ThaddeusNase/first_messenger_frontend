@@ -63,8 +63,6 @@ export class ChatComponent implements OnInit {
         const chatrooms_data = data["chatrooms"]["all_user_chatrooms"];
 
         chatrooms_data.forEach((roomData: RoomResponseData) => {
-          console.log(roomData);
-          
           const room = new Chatroom(roomData.id, new Date(roomData.creation_date), roomData.name, roomData.member_limit);
           tmpChatrooms.push(room);
         });

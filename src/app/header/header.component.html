@@ -3,7 +3,8 @@
 
 
 <div class="navbar">
-    <div class="logo"> *LOGO* </div>
+    <div class="logo" style="cursor: pointer;"> <a [routerLink]="['/home']">*LOGO*</a>
+    </div>
     <img (click)="onOpenChat()" src="/assets/img/chat-icons.png" alt="chat-icon" class="header-icon">
     <div class="chat-partner-box"></div>
 

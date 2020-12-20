@@ -9,10 +9,9 @@
         um zu veranschaulichen, wie die einzelnen chatroom-container in cdk-virtual-scroll-viewport in DOM gerendert werden
         zB <div class="animated slideInRight" 
     - in normaler Liste: <ul> <li></li> </ul> würde die Animation: slidInRight nur EINMAL für die initial page load ausgeführt werden! -->
-    <li routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="chatroom-container"  *cdkVirtualFor="let room of chatrooms; index as i">
-        <a [routerLink]="['/chat', chatrooms[i].id]">
-            <app-chatroom [chatroom]="room"></app-chatroom>
-        </a>
+
+    <li class="chatroom-container" *cdkVirtualFor="let room of chatrooms; index as i" (click)="onOpenChatroom(i)" [ngClass]="{'router-link-active': chatroomOpenedCheck(i)}">
+        <app-chatroom [chatroom]="room"></app-chatroom>
     </li>
 </cdk-virtual-scroll-viewport>
 
