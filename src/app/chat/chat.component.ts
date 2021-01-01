@@ -23,7 +23,7 @@ import { ChatroomDialogComponent } from './chatroom-dialog/chatroom-dialog.compo
 })
 export class ChatComponent implements OnInit {
 
-  createChatroomDialogOpened = false
+  chatroomDialogoOpened = false
 
   constructor(
       private sessionService: SessionService, 
@@ -72,16 +72,16 @@ export class ChatComponent implements OnInit {
   }
 
   onCreateChatroom() {
-    this.createChatroomDialogOpened = true
+    this.chatroomDialogoOpened = true
   }
 
-  onCloseCreateChatroomDialog() {
-    this.createChatroomDialogOpened = false
+  onCloseChatroomDialog() {
+    this.chatroomDialogoOpened = false
   }
 
   onSaveChatroom(newChatroom: Chatroom) {
     console.log("new Chatroom: ", newChatroom);
-    this.createChatroomDialogOpened = false
+    this.chatroomDialogoOpened = false
     // https://stackoverflow.com/questions/55369253/cdkvirtualfor-not-rendering-new-items
     // s. stackoverflow: chatroom muss mutated werden, damit verändertes == NEUE chatrooms[]- INSTANZ
     // auch von *cdkVirtualFor="let room of chatrooms" übernommen werden kann

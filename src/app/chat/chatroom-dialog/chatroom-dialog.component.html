@@ -2,18 +2,48 @@
 <div class="request-error-container" [ngClass]="{'active': requestError }"> {{ requestError }} </div>
 
 <div class="dialog-container" [ngClass]="{'error': requestError}">
-  <h2>Chatgroup Name</h2>
+  <div class="dialog-header">
+    <img (click)="onClose()" class="cancel-button" src="/assets/img/cancel-button-icon.svg" alt="cancel-button">
+    <h1> Neue Nachricht </h1>
+    <button class="create-group-btn"> Create Group </button>
+  </div>
+  
+
+  <div class="search-constainer">
+    <!-- <button type="submit"> Search</button> --> <!-- brauchen keinen submit button: jedes mal neune http request, sobald sich input verändert hat -->
+    <form #f="ngForm">
+      <label for="searchTerm">An: </label>
+      <input type="text" ngModel name="searchTerm" placeholder="Suchen...">
+    </form>
+  </div>
+
+  <div class="contact-list">
+    <cdk-virtual-scroll-viewport itemSize="100">
+      <!-- *cdkVirtualFor ersetzt *ngFor funktioniert aber 1zu1 gleich
+        - cdk is keeping track of the items inside the list & which items will fit in the viewport 
+        - animate.css s. https://dev.to/angular/angular-animate-css-in-five-easy-steps-8o6 installieren
+        um zu veranschaulichen, wie die einzelnen chatroom-container in cdk-virtual-scroll-viewport in DOM gerendert werden
+        zB <div class="animated slideInRight" 
+        - in normaler Liste: <ul> <li></li> </ul> würde die Animation: slidInRight nur EINMAL für die initial page load ausgeführt werden! -->
+        
+        <li class="user-entry-container" *cdkVirtualFor="let user of users; index as i" (click)="onUserSelected(i)" [ngClass]="{'router-link-active': userMarked(i)}">
+          <app-user-entry [user]="user"></app-user-entry>
+        </li>
+    </cdk-virtual-scroll-viewport>
+  </div>
+  
+
+  <!-- <h2>Chatgroup Name</h2>
   <form [formGroup]="chatroomForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <input class="form-control" placeholder="Group Name" formControlName="roomName">
       <div *ngIf="formError" class="invalid-feedback"> {{ formError }} </div>
-    </div>
+    </div> -->
     <!-- <label>Group name</label> -->
     <!-- bzw. cancel-btn <button type="reset" ?! -->
-      <button type="button" class="btn btn-light" (click)="onClose()" >Cancel</button>
+      <!-- <button type="button" class="btn btn-light" (click)="onClose()" >Cancel</button>
       <button type="submit" class="btn btn-primary"> Save </button>
-  </form>
-
+  </form> -->
   <!-- <div *ngIf="chatroomForm.controls.roomName.errors?" class="invalid-feedback"> Group name can not be empty </div> -->
   
 </div>

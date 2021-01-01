@@ -1,5 +1,5 @@
 import { NgSwitchCase } from '@angular/common';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -12,6 +12,9 @@ export interface UserResponseData {
     uid: number,
     bio: string,
     sid?: string,
+}
+
+export interface FilteredUsersResponseData {
 
 }
 
@@ -43,6 +46,8 @@ export class UsersService {
         ).pipe(catchError(this.handleErrors))
     }
 
+
+
     fetchUserBySid(sid: string) {
         return this.http.get<UserResponseData>(
             "http://127.0.0.1:5000/user",
@@ -52,7 +57,14 @@ export class UsersService {
         ).pipe(catchError(this.handleErrors))
     }
 
-    
+
+    fetchFilteredUsers(searchTerm: string) {
+        return this.http.get<FilteredUsersResponseData>("http://127.0.0.1:5000/filter_users",
+            {
+                params: new HttpParams().set("search_term", searchTerm)
+            }
+        ).pipe(catchError(this.handleErrors))
+    } 
 
 
     handleErrors(errorResponse: HttpErrorResponse) {

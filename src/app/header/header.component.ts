@@ -10,6 +10,7 @@ import { AuthService } from '../auth/auth.service';
 export class HeaderComponent implements OnInit {
 
   loginMode = false
+  profileDropdownOpened = false
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -17,21 +18,21 @@ export class HeaderComponent implements OnInit {
     this.loginMode = this.authService.isAuthenticated()
   }
 
-  onLoginLogout(isLoggedIn:boolean){
-    // wenn user auf btn drückt, wenn er eingeloggt ist (loginMode = true) -> dann Logout button: ausloggen!
-    if (!isLoggedIn) {
-      this.router.navigate(["/auth"])
-    } else {
-      // TODO: wo redirecten wenn user sich ausloggt
-      this.authService.logout()
-      console.log("user logged out");
-      this.router.navigate["/home"]
-      
-    }
+
+  onLogin() {
+    this.router.navigate(["/auth"])
   }
 
   onOpenChat() {
     this.router.navigate(["/chat"])
+  }
+
+  onOpenDropdown() {
+    this.profileDropdownOpened = true
+  }
+
+  onCloseDropdown(closed:boolean) {
+    this.profileDropdownOpened = false
   }
 
 }

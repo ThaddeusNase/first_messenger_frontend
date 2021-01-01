@@ -18,6 +18,10 @@ import { ChatFeedComponent } from './chat/chatwindow/chat-feed/chat-feed.compone
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ChatHeaderComponent } from './chat/chatwindow/chat-header/chat-header.component';
+import { ChatFooterComponent } from './chat/chatwindow/chat-footer/chat-footer.component';
+import { UserEntryComponent } from './chat/chatroom-dialog/user-entry/user-entry.component';
+import { ProfileDropdownMenuComponent } from './header/profile-dropdown-menu/profile-dropdown-menu.component';
 // import { ScrollingModule }
 
 
@@ -32,7 +36,11 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     ChatwindowComponent,
     ChatroomListComponent,
     ChatroomDialogComponent,
-    ChatFeedComponent
+    ChatFeedComponent,
+    ChatHeaderComponent,
+    ChatFooterComponent,
+    UserEntryComponent,
+    ProfileDropdownMenuComponent,
   ],
   imports: [
     BrowserModule,

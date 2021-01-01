@@ -5,13 +5,14 @@
 
 
 
-import { Component, Inject, OnInit, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatFormFieldControl, MAT_DIALOG_DATA } from '@angular/material';
 import { exhaustMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Chatroom } from 'src/app/shared/chatroom.model';
 import { User } from 'src/app/shared/user.model';
+import { UsersService } from 'src/app/shared/users.service';
 import { ChatService, MembershipResponseData } from '../chat.service';
 import { RoomResponseData } from "../chat.service"
 
@@ -25,8 +26,11 @@ export class ChatroomDialogComponent implements OnInit {
   chatroomForm: FormGroup;
   newChatroom: Chatroom;
 
+  users: User[] = [];
+
   @Output() closeEvent = new EventEmitter()
   @Output() saveEvent = new EventEmitter<Chatroom>()
+  @ViewChild("f", {static: true}) searchUserForm = NgForm; 
 
   formError: string = "";
   requestError: string;
@@ -36,7 +40,8 @@ export class ChatroomDialogComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private chatService: ChatService,
-    private authService: AuthService
+    private authService: AuthService,
+    private usersService: UsersService
     // @Inject(MAT_DIALOG_DATA) public data: {name: string}, // @Inject... public data benötigt, wenn wir zB datten von chatroom-list in chatroom-dialog übergeben wollen
   ) { }
 
@@ -48,18 +53,27 @@ export class ChatroomDialogComponent implements OnInit {
     }) 
   } 
 
+
+
+  onUserSelected(i) {
+    // s. chatroom-list-component chatroomOpenedCheck() ähnlich
+  }
+
+
+
   onSubmit() {
+    // ----- ONsubmit für gruppe erstellen: ------
     // TODO: Member/Kontakte hinzufügen!  memberLimit 
-    if (this.chatroomForm.invalid) {
-      console.log("chatroomForm not valid");
-      // console.log(this.chatroomForm);
-      this.formError = this.getChatroomFormErrors(this.chatroomForm.controls.roomName.errors)
-    } else {
-      this.createRoomAndJoin()
-      // this.saveEvent.emit() befindet sich in createRoomAndJoin() method, da erst geprüft werden muss,
-      // ob fehler this.chatservice.createNewChatroom() ODER this.chatservice.joinChatroom
-      // erst dann fenster schließen ansonsten fehlermeldung in Chatroom-dialog.component(.html) s. this.requestError
-    }
+    // if (this.chatroomForm.invalid) {
+    //   console.log("chatroomForm not valid");
+    //   // console.log(this.chatroomForm);
+    //   this.formError = this.getChatroomFormErrors(this.chatroomForm.controls.roomName.errors)
+    // } else {
+    //   this.createRoomAndJoin()
+    //   // this.saveEvent.emit() befindet sich in createRoomAndJoin() method, da erst geprüft werden muss,
+    //   // ob fehler this.chatservice.createNewChatroom() ODER this.chatservice.joinChatroom
+    //   // erst dann fenster schließen ansonsten fehlermeldung in Chatroom-dialog.component(.html) s. this.requestError
+    // }
   }
 
 

@@ -16,7 +16,7 @@ import { ChatService, RoomResponseData } from '../chat.service';
 })
 export class ChatwindowComponent implements OnInit {
 
-  @Input() chatroom: Chatroom;
+  chatroom: Chatroom;
   chatpartner: UserResponseData;
 
   memberhsips: MembershipModel[] = []
@@ -34,13 +34,15 @@ export class ChatwindowComponent implements OnInit {
 
 
   ngOnInit() {
+    this.fetchChatroomOrChatrpartner()
+  }
+
+  fetchChatroomOrChatrpartner() {
     this.activatedRoute.data.subscribe(
       (data: Data) => {
         var resolvedData = data["openedChatroomData"]
-        // console.log("---resolved-data: ", resolvedData);
         // wenn resolvedData das Property .member_limit besitzt: dann ist resolvedData == UserResponseData
         // (d.h. chatgroup hat > 2 member)
-        
         if (resolvedData.member_limit !== undefined) {
           this.chatpartner = null;
           this.chatroom = resolvedData // -> unnötig: da chatroom bereits via @Input() von chatroom-list.componment übergeben wird           
@@ -49,10 +51,8 @@ export class ChatwindowComponent implements OnInit {
           this.chatroom = null
           this.chatpartner = resolvedData
         }
-        
       }
     )
-    
   }
 
   // TODO: eventuell in Resolver nach url-subscriben und entsprechenden Chatroom fetchen (via Http request)

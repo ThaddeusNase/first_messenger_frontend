@@ -19,6 +19,9 @@
     width: 70%;
     height: 100vh;
     background-color: blueviolet;
+
+    display: inline-block;
+    text-align: right;
 }
 
 /* .seperationline {
@@ -26,3 +29,8 @@
     background: black;
     width: 1px;
 } */
+
+#create-room-button {
+    /* display: inline-block; == default von button element/tag */
+    margin-left: 15px ;
+}

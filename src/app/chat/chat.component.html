@@ -15,11 +15,10 @@
 </div> -->
 
 
-<app-chatroom-dialog (saveEvent)="onSaveChatroom($event)" (closeEvent)="onCloseCreateChatroomDialog()" *ngIf="createChatroomDialogOpened"></app-chatroom-dialog>
+<app-chatroom-dialog (saveEvent)="onSaveChatroom($event)" (closeEvent)="onCloseChatroomDialog()" *ngIf="chatroomDialogoOpened"></app-chatroom-dialog>
 <div class="container">
   <div class="chatroom-container">
-    <button (click)="onCreateChatroom()"> *Create Group* </button>
-    <button> *Chat with contact* </button>
+    <button id="create-room-button" class="btn btn-primary" (click)="onCreateChatroom()"> + </button>
     <app-chatroom-list [chatrooms]="chatrooms"></app-chatroom-list>
   </div>
   <div class="chatwindow-container">

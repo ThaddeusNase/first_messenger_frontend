@@ -13,7 +13,7 @@
     background-color: darkgrey;
 } */
 
-.chat-controls {
+.window-footer {
     position: fixed;
     width: 100%;
     height: 70px;

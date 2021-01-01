@@ -147,7 +147,6 @@ export class ChatService {
                         console.log("--- sessionData: ", sessionResData);
                         // this.sendViaHttp(msg, recipient)
                     }
-
                 }
             )
     }

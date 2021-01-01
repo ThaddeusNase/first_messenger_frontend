@@ -5,9 +5,19 @@
 <div class="navbar">
     <div class="logo" style="cursor: pointer;"> <a [routerLink]="['/home']">*LOGO*</a>
     </div>
-    <img (click)="onOpenChat()" src="/assets/img/chat-icons.png" alt="chat-icon" class="header-icon">
+    <img (click)="onOpenChat()" src="/assets/img/chat-icons.png" alt="chat-icon" class="chat-icon">
     <div class="chat-partner-box"></div>
 
-    <button (click)="onLoginLogout(loginMode)" id="auth-btn"> {{ loginMode ? "Logout" : "Login"}} </button>
+    <div *ngIf="loginMode">
+        <img class="profile-image-icon" src="/assets/img/avatardefault.png" alt="profile-picture" (click)="onOpenDropdown()">
+        <div *ngIf="profileDropdownOpened" class="profile-dropdown-container">
+            <app-profile-dropdown-menu  (dropdownClosed)="onCloseDropdown($event)"></app-profile-dropdown-menu>
+        </div>
+    </div>
+
+    <button (click)="onLogin()" class="login-button" *ngIf="!loginMode">Login</button>
+    
+
+    <!-- <button (click)="onLoginLogout(loginMode)" id="auth-btn"> {{ loginMode ? "Logout" : "Login"}} </button> -->
     
 </div>
