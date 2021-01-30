@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Chatroom } from 'src/app/shared/chatroom.model';
+import { Chatroom } from 'src/app/shared/models/chatroom.model';
 
 @Component({
   selector: 'app-chat-feed',

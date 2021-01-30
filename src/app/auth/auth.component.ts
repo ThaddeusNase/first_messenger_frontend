@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder ,FormGroup, FormControl, Validators } from '@angular/forms';
-import { MustMatch } from '../shared/custom-validators';
+import { MustMatch } from '../shared/validators/custom-validators';
 import {AuthResponseData} from './auth.service' 
 import { AuthService } from './auth.service';
 import { Data } from '@angular/router';

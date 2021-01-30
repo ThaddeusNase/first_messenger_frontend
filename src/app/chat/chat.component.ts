@@ -5,16 +5,13 @@ import { ActivatedRoute, Data } from '@angular/router';
 import { sample } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { SessionResponseData, SessionService } from '../auth/session.service';
-import { Chatroom } from '../shared/chatroom.model';
-import { MessageModel } from '../shared/message.model';
-import { User } from '../shared/user.model';
-import { UsersService } from '../shared/users.service';
+import { UsersService } from '../shared/services/users.service';
 import { ChatService, RoomResponseData, UserChatroomsResponseData } from './chat.service';
 // import { ChatroomDialogComponent } from './chatroom-dialog/chatroom-dialog.component';
 import { ChatroomDialogComponent } from './chatroom-dialog/chatroom-dialog.component';
-
-
-
+import { Chatroom } from '../shared/models/chatroom.model';
+import { MessageModel } from '../shared/models/message.model';
+import { CurrentUser } from '../shared/models/currentuser.model';
 
 @Component({
   selector: 'app-chat',
@@ -33,7 +30,7 @@ export class ChatComponent implements OnInit {
       private activatedRoute: ActivatedRoute
   ){ }
 
-  current_user: User;
+  current_user: CurrentUser;
   chatrooms: Chatroom[] = [];
    
   // TODO: soäter noch mit reactive form kompliziertere message form -> group chats , an mehereren rooms senden etc
@@ -45,7 +42,7 @@ export class ChatComponent implements OnInit {
     this.fetchUserChatrooms();
 
     this.authService.currentUser.subscribe(
-      (user: User) => {
+      (user: CurrentUser) => {
         this.current_user = user
       }
     )

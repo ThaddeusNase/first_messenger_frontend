@@ -2,15 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators'
-import { User } from '../shared/user.model';
 import { Router } from '@angular/router';
 import { SessionService } from './session.service';
+import { CurrentUser } from '../shared/models/currentuser.model';
 
 // TODO: ----------------------------------------
 // localStorage + autologin/logout
 // error Handeling (fehler testen: LOGIN (was wenn email nicht registriert), email bereits registriert, etc. )
 // ----------------------------------------------
-
 
 export interface AuthResponseData {
   email: string,
@@ -34,7 +33,7 @@ export class AuthService {
   // currentUser wird benötigt für weitere reuests zB Freunde/ChatPartner adden oder für Chat-funktion()nachrichten scrheiben etc
   // allgm für funktionen für die man eingeloggt/authentifiziert sein muss
   // dann currentUser.(pipe(take(1), exhaustMap(...))).subscripe()
-  currentUser =  new BehaviorSubject<User>(null);
+  currentUser =  new BehaviorSubject<CurrentUser>(null);
 
   register(email: string, password: string) {
     const userLoginData = {"email": email, "password": password}
@@ -66,7 +65,7 @@ export class AuthService {
     const currentTime = new Date().getTime()
     const expirationDate = new Date(expiresIn + currentTime)
     
-    const newUser = new User(resData.email, resData.id, resData.token, expirationDate)
+    const newUser = new CurrentUser(resData.email, resData.id, resData.token, expirationDate)
     this.currentUser.next(newUser)
     localStorage.setItem("userData", JSON.stringify(newUser))
     // this.autologout(expirationDate.getTime() - new Date().getTime())
@@ -129,7 +128,7 @@ export class AuthService {
 
     else {
       console.log("user fetched through loaclstorage");
-      const user: User = new User(userData.email, userData.id.toString(), userData._token, new Date(userData._expirationDate))
+      const user: CurrentUser = new CurrentUser(userData.email, userData.id.toString(), userData._token, new Date(userData._expirationDate))
       if (user && user.token) {
         this.currentUser.next(user);
         this.autologout(new Date(userData._expirationDate).getTime() - new Date().getTime()); // oder Date.now() -> static method

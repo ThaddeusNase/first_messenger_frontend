@@ -22,6 +22,8 @@ import { ChatHeaderComponent } from './chat/chatwindow/chat-header/chat-header.c
 import { ChatFooterComponent } from './chat/chatwindow/chat-footer/chat-footer.component';
 import { UserEntryComponent } from './chat/chatroom-dialog/user-entry/user-entry.component';
 import { ProfileDropdownMenuComponent } from './header/profile-dropdown-menu/profile-dropdown-menu.component';
+import { ProfileComponent } from './profile/profile.component';
+import { AutoWidthDirective } from './shared/directives/autowidth.directive';
 // import { ScrollingModule }
 
 
@@ -41,6 +43,8 @@ import { ProfileDropdownMenuComponent } from './header/profile-dropdown-menu/pro
     ChatFooterComponent,
     UserEntryComponent,
     ProfileDropdownMenuComponent,
+    ProfileComponent,
+    AutoWidthDirective
   ],
   imports: [
     BrowserModule,

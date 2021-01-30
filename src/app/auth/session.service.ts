@@ -6,7 +6,6 @@ import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import * as io from 'socket.io-client';
 import { environment } from 'src/environments/environment';
-import { User } from '../shared/user.model';
 
 
 // TODO: alle Observables/Http Requests unsubscriben: 

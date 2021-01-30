@@ -8,13 +8,13 @@ import { environment } from 'src/environments/environment';
 import { isObject } from 'util';
 import { AuthService } from '../auth/auth.service';
 import { SessionResponseData, SessionService } from '../auth/session.service';
-import { Chatroom } from '../shared/chatroom.model';
-import { MembershipModel } from '../shared/membership.model';
-import { MessageModel } from '../shared/message.model';
+import { Chatroom } from '../shared/models/chatroom.model';
+import { MembershipModel } from '../shared/models/membership.model';
+import { MessageModel } from '../shared/models/message.model';
 
-import { User } from '../shared/user.model';
-import { UsersService } from '../shared/users.service';
-import { UserResponseData } from '../shared/users.service'
+import { CurrentUser } from '../shared/models/currentuser.model';
+import { UsersService } from '../shared/services/users.service';
+import { UserResponseData } from '../shared/services/users.service'
 
 // TODO: interfaces in einer extra Datei innerhalb des chat-directory 
 export interface RoomResponseData {
@@ -132,6 +132,8 @@ export class ChatService {
 
         // check ob partner/recipinet eine session id besitzt mit email 
         // TODO: fetch by uid, von kontaktlist via "contacts = User[]" (= leeres User array)
+
+        // TODO: AUFPASSEN MIT ÜBERARBEITER USERRESPONSEDATA!!! (first_name und surname)
         this.usersService.fetchUserByEmail(recipientEmail).pipe(exhaustMap(
             (recipient: UserResponseData) => {
                 return this.sessionService.getSession(recipient.uid)

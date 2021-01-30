@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Chatroom } from '../shared/chatroom.model';
+import { Chatroom } from '../shared/models/chatroom.model';
 import { ChatService, RoomResponseData, UserChatroomsResponseData } from './chat.service';
 
 @Injectable({"providedIn": "root"})

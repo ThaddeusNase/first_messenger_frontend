@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChange, SimpleChanges } from '@angular/core';
-import { Chatroom } from 'src/app/shared/chatroom.model';
-import { MessageModel } from 'src/app/shared/message.model';
+import { Chatroom } from 'src/app/shared/models/chatroom.model';
+import { MessageModel } from 'src/app/shared/models/message.model';
 
 @Component({
   selector: 'app-chatroom',

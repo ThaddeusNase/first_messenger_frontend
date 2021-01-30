@@ -10,9 +10,9 @@ import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatFormFieldControl, MAT_DIALOG_DATA } from '@angular/material';
 import { exhaustMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Chatroom } from 'src/app/shared/chatroom.model';
-import { User } from 'src/app/shared/user.model';
-import { UsersService } from 'src/app/shared/users.service';
+import { Chatroom } from 'src/app/shared/models/chatroom.model';
+import { User } from 'src/app/shared/models/user.model';
+import { UsersService } from 'src/app/shared/services/users.service';
 import { ChatService, MembershipResponseData } from '../chat.service';
 import { RoomResponseData } from "../chat.service"
 
@@ -30,7 +30,7 @@ export class ChatroomDialogComponent implements OnInit {
 
   @Output() closeEvent = new EventEmitter()
   @Output() saveEvent = new EventEmitter<Chatroom>()
-  @ViewChild("f", {static: true}) searchUserForm = NgForm; 
+  @ViewChild("searchForm", {static: true}) searchUserForm = NgForm; 
 
   formError: string = "";
   requestError: string;

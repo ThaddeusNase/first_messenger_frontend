@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { exhaustMap, take } from 'rxjs/operators';
-import { Chatroom } from 'src/app/shared/chatroom.model';
-import { MembershipModel } from 'src/app/shared/membership.model';
-import { User } from 'src/app/shared/user.model';
-import { UserResponseData, UsersService } from 'src/app/shared/users.service';
+import { Chatroom } from 'src/app/shared/models/chatroom.model';
+import { MembershipModel } from 'src/app/shared/models/membership.model';
+import { CurrentUser } from 'src/app/shared/models/currentuser.model';
+import { UserResponseData, UsersService } from 'src/app/shared/services/users.service';
 import { ChatService, MembershipResponseData, MembershipsResponseData, RoomResponseData } from '../chat.service';
 
 @Injectable({providedIn: "root"})

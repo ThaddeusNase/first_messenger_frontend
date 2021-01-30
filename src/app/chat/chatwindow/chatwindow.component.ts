@@ -3,10 +3,10 @@ import { ActivatedRoute, Data, Params, Router } from '@angular/router';
 import { timeStamp } from 'console';
 import { VirtualTimeScheduler } from 'rxjs';
 import { exhaustMap, map, take } from 'rxjs/operators';
-import { Chatroom } from 'src/app/shared/chatroom.model';
-import { MembershipModel } from 'src/app/shared/membership.model';
-import { User } from 'src/app/shared/user.model';
-import { UserResponseData, UsersService } from 'src/app/shared/users.service';
+import { Chatroom } from 'src/app/shared/models/chatroom.model';
+import { MembershipModel } from 'src/app/shared/models/membership.model';
+import { CurrentUser } from 'src/app/shared/models/currentuser.model';
+import { UserResponseData, UsersService } from 'src/app/shared/services/users.service';
 import { ChatService, RoomResponseData } from '../chat.service';
 
 @Component({

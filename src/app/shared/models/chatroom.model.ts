@@ -1,5 +1,4 @@
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
-import { User } from './user.model';
 
 export class Chatroom {
     constructor(

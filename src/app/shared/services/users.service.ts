@@ -1,13 +1,16 @@
 import { NgSwitchCase } from '@angular/common';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { error } from 'console';
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { User } from './user.model';
+import { User } from '../models/user.model';
 
 
 
 export interface UserResponseData {
+    first_name: string,
+    surname: string,
     email: string, 
     uid: number,
     bio: string,
@@ -57,6 +60,23 @@ export class UsersService {
         ).pipe(catchError(this.handleErrors))
     }
 
+    updateUser(user: User) {
+        console.log("---user: ", user);
+        
+        // TODO: refactor put request: nur uid in headers, den rest in body!!!
+        return this.http.put<UserResponseData>("http://127.0.0.1:5000/user", {} ,{
+            headers: new HttpHeaders(
+                // header values dürfen nicht none (undefined oder Null sein) -> deshalb leerer string ""
+                {
+                    "uid": user.id || "",
+                    "email": user.email || "",
+                    "firstname": user.firstname || "",
+                    "surname": user.surname || "",
+                    "bio": user.bio || ""
+                })
+        }).pipe(catchError(this.handleErrors))
+    }
+
 
     fetchFilteredUsers(searchTerm: string) {
         return this.http.get<FilteredUsersResponseData>("http://127.0.0.1:5000/filter_users",
@@ -69,9 +89,10 @@ export class UsersService {
 
     handleErrors(errorResponse: HttpErrorResponse) {
         let errorMessage = "unknown error occured in UsersService (not in responseError)"
+        console.error(errorResponse)
         
         if (!errorResponse.error || !errorResponse.error.message) {
-            return errorMessage
+            return throwError(errorMessage)
         }
 
         switch (errorResponse.error.message) {
@@ -84,8 +105,11 @@ export class UsersService {
             case "USER_DOES_NOT_EXIST":
                 errorMessage = "user does not exist"
                 break;
+            case "USER_UPDATE_REQUIRES_UID":
+                errorMessage = "user-id is required to update changes"
             default:
                 errorMessage = "unknown error occured in UsersService (thrown by default!)"
+                console.error(errorResponse);
                 break;
         }
 

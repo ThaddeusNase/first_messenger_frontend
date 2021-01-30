@@ -11,26 +11,25 @@
 
   <div class="search-constainer">
     <!-- <button type="submit"> Search</button> --> <!-- brauchen keinen submit button: jedes mal neune http request, sobald sich input verändert hat -->
-    <form #f="ngForm">
+    <form #searchForm="ngForm">
       <label for="searchTerm">An: </label>
       <input type="text" ngModel name="searchTerm" placeholder="Suchen...">
     </form>
   </div>
 
-  <div class="contact-list">
-    <cdk-virtual-scroll-viewport itemSize="100">
-      <!-- *cdkVirtualFor ersetzt *ngFor funktioniert aber 1zu1 gleich
-        - cdk is keeping track of the items inside the list & which items will fit in the viewport 
-        - animate.css s. https://dev.to/angular/angular-animate-css-in-five-easy-steps-8o6 installieren
-        um zu veranschaulichen, wie die einzelnen chatroom-container in cdk-virtual-scroll-viewport in DOM gerendert werden
-        zB <div class="animated slideInRight" 
-        - in normaler Liste: <ul> <li></li> </ul> würde die Animation: slidInRight nur EINMAL für die initial page load ausgeführt werden! -->
-        
-        <li class="user-entry-container" *cdkVirtualFor="let user of users; index as i" (click)="onUserSelected(i)" [ngClass]="{'router-link-active': userMarked(i)}">
-          <app-user-entry [user]="user"></app-user-entry>
-        </li>
-    </cdk-virtual-scroll-viewport>
-  </div>
+  
+  <cdk-virtual-scroll-viewport itemSize="100" class="contact-list">
+    <!-- *cdkVirtualFor ersetzt *ngFor funktioniert aber 1zu1 gleich
+      - cdk is keeping track of the items inside the list & which items will fit in the viewport 
+      - animate.css s. https://dev.to/angular/angular-animate-css-in-five-easy-steps-8o6 installieren
+      um zu veranschaulichen, wie die einzelnen chatroom-container in cdk-virtual-scroll-viewport in DOM gerendert werden
+      zB <div class="animated slideInRight" 
+      - in normaler Liste: <ul> <li></li> </ul> würde die Animation: slidInRight nur EINMAL für die initial page load ausgeführt werden! -->
+      
+      <li class="user-entry-container" *cdkVirtualFor="let user of users; index as i" (click)="onUserSelected(i)" [ngClass]="{'router-link-active': userMarked(i)}">
+        <app-user-entry [user]="user"></app-user-entry>
+      </li>
+  </cdk-virtual-scroll-viewport>
   
 
   <!-- <h2>Chatgroup Name</h2>
