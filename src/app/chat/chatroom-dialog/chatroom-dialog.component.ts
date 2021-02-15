@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { exhaustMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Chatroom } from 'src/app/shared/models/chatroom.model';
+import { CurrentUser } from 'src/app/shared/models/currentuser.model';
 import { User } from 'src/app/shared/models/user.model';
 import { FilteredUsersResponseData, UserResponseData, UsersService } from 'src/app/shared/services/users.service';
 import { ChatService, MembershipResponseData } from '../chat.service';
@@ -29,6 +30,7 @@ export class ChatroomDialogComponent implements OnInit {
   filteredUsers: User[] = [];
   contactSelected = false;
   selectedUser: User;
+  currentUser: CurrentUser;
 
   fetchFilteredUsersSubscribtion: Subscription
 
@@ -51,13 +53,26 @@ export class ChatroomDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.fetchCurrentUser()
     this.initSearchUserForm()
     this.getFilteredUser()
+
+    
     
     // this.chatroomForm = this.formBuilder.group({
     //   "roomName": ["", [Validators.required, Validators.minLength(3), Validators.maxLength(40)]],
     //   // TODO: wenn button  gedrückt -> dann zusätzliches *selecting only dropdown-input-field* ausklappen  customMemberLimit: ["", []]
     // })
+  }
+
+  fetchCurrentUser() {
+    this.authService.currentUser.subscribe(
+      (currUser: CurrentUser) => {
+        this.currentUser = currUser
+        console.log(currUser);
+        
+      }
+    )
   }
 
   initSearchUserForm() {

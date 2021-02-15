@@ -18,9 +18,11 @@
   </div>
   
   <ul class="contact-list">
-    <li class="contact-list__entry" *ngFor="let user of filteredUsers; index as i" (click)="onUserSelected(i)">
-      <app-user-entry [user]="user"></app-user-entry>
-    </li>
+    <div *ngFor="let user of filteredUsers; index as i">
+      <li class="contact-list__entry" (click)="onUserSelected(i)" *ngIf="currentUser.id !== user.id">
+        <app-user-entry [user]="user"></app-user-entry>
+      </li>
+    </div>
   </ul>
 
   <div class="private-message-container" [ngClass]="{'active': contactSelected}">
