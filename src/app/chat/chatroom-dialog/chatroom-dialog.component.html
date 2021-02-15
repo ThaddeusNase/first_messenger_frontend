@@ -5,31 +5,33 @@
   <div class="dialog-header">
     <img (click)="onClose()" class="cancel-button" src="/assets/img/cancel-button-icon.svg" alt="cancel-button">
     <h1> Neue Nachricht </h1>
-    <button class="create-group-btn"> Create Group </button>
+    <button class="action-btn"> Create Group </button>
   </div>
   
 
   <div class="search-constainer">
     <!-- <button type="submit"> Search</button> --> <!-- brauchen keinen submit button: jedes mal neune http request, sobald sich input verändert hat -->
-    <form #searchForm="ngForm">
+    <form [formGroup]="searchUserForm">
       <label for="searchTerm">An: </label>
-      <input type="text" ngModel name="searchTerm" placeholder="Suchen...">
+      <input type="text" formControlName="searchTerm" placeholder="Suchen...">
     </form>
   </div>
-
   
-  <cdk-virtual-scroll-viewport itemSize="100" class="contact-list">
-    <!-- *cdkVirtualFor ersetzt *ngFor funktioniert aber 1zu1 gleich
-      - cdk is keeping track of the items inside the list & which items will fit in the viewport 
-      - animate.css s. https://dev.to/angular/angular-animate-css-in-five-easy-steps-8o6 installieren
-      um zu veranschaulichen, wie die einzelnen chatroom-container in cdk-virtual-scroll-viewport in DOM gerendert werden
-      zB <div class="animated slideInRight" 
-      - in normaler Liste: <ul> <li></li> </ul> würde die Animation: slidInRight nur EINMAL für die initial page load ausgeführt werden! -->
-      
-      <li class="user-entry-container" *cdkVirtualFor="let user of users; index as i" (click)="onUserSelected(i)" [ngClass]="{'router-link-active': userMarked(i)}">
-        <app-user-entry [user]="user"></app-user-entry>
-      </li>
-  </cdk-virtual-scroll-viewport>
+  <ul class="contact-list">
+    <li class="contact-list__entry" *ngFor="let user of filteredUsers; index as i" (click)="onUserSelected(i)">
+      <app-user-entry [user]="user"></app-user-entry>
+    </li>
+  </ul>
+
+  <div class="private-message-container" [ngClass]="{'active': contactSelected}">
+    <div *ngIf="selectedUser" class="private-message-header">
+      <img (click)="onCancelPrivateMessage()" class="message-cancel-button" src="/assets/img/back-arrow-button.png" alt="cancel-button">
+      <a [routerLink]="['/profile', selectedUser.id]">
+        <app-user-entry [user]="selectedUser"></app-user-entry>
+      </a>
+    </div>
+  </div>
+  <button class="action-btn" (click)="onSendPrivateMessage()"> Send </button>
   
 
   <!-- <h2>Chatgroup Name</h2>

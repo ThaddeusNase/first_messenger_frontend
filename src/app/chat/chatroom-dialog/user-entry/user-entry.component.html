@@ -1,1 +1,13 @@
-<p>user-entry works!</p>
+
+<div class="entry-container">
+    <div class="img-frame"> 
+        <img src="/assets/img/avatardefault.png" alt="chat-icon" class="profile-image">
+    </div>
+    
+    <div class="profile-information" >
+        <div class="profile-name" *ngIf="user.firstname || user.surname" > {{ user.firstname }} {{ user.surname }} </div>
+        <div class="profile-email" [ngClass]="{'only-email': !user.firstname && !user.surname}"> {{ user.email }} </div>  
+    </div>
+</div>
+
+

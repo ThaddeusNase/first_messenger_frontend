@@ -18,7 +18,7 @@ export interface UserResponseData {
 }
 
 export interface FilteredUsersResponseData {
-
+    filtered_users: UserResponseData[] 
 }
 
 
@@ -79,12 +79,15 @@ export class UsersService {
 
 
     fetchFilteredUsers(searchTerm: string) {
+
+        // TODO: if searchTerm == "" || null: 
+        // -> dann top 10 von contacte fetchen (mit denen man nochn keinen Chatroom hat)
         return this.http.get<FilteredUsersResponseData>("http://127.0.0.1:5000/filter_users",
             {
-                params: new HttpParams().set("search_term", searchTerm)
+                params: new HttpParams().set("searchterm", searchTerm)
             }
         ).pipe(catchError(this.handleErrors))
-    } 
+    }
 
 
     handleErrors(errorResponse: HttpErrorResponse) {
@@ -114,7 +117,6 @@ export class UsersService {
         }
 
         return throwError(errorMessage)
-
     }
 
 

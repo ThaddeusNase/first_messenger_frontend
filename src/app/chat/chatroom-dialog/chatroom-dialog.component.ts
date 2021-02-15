@@ -6,13 +6,14 @@
 
 
 import { Component, Inject, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatFormFieldControl, MAT_DIALOG_DATA } from '@angular/material';
+import { Subscription } from 'rxjs';
 import { exhaustMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Chatroom } from 'src/app/shared/models/chatroom.model';
 import { User } from 'src/app/shared/models/user.model';
-import { UsersService } from 'src/app/shared/services/users.service';
+import { FilteredUsersResponseData, UserResponseData, UsersService } from 'src/app/shared/services/users.service';
 import { ChatService, MembershipResponseData } from '../chat.service';
 import { RoomResponseData } from "../chat.service"
 
@@ -25,12 +26,16 @@ export class ChatroomDialogComponent implements OnInit {
 
   chatroomForm: FormGroup;
   newChatroom: Chatroom;
+  filteredUsers: User[] = [];
+  contactSelected = false;
+  selectedUser: User;
 
-  users: User[] = [];
+  fetchFilteredUsersSubscribtion: Subscription
 
   @Output() closeEvent = new EventEmitter()
   @Output() saveEvent = new EventEmitter<Chatroom>()
-  @ViewChild("searchForm", {static: true}) searchUserForm = NgForm; 
+
+  searchUserForm: FormGroup; 
 
   formError: string = "";
   requestError: string;
@@ -46,17 +51,80 @@ export class ChatroomDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.initSearchUserForm()
+    this.getFilteredUser()
     
-    this.chatroomForm = this.formBuilder.group({
-      "roomName": ["", [Validators.required, Validators.minLength(3), Validators.maxLength(40)]],
-      // TODO: wenn button  gedrückt -> dann zusätzliches *selecting only dropdown-input-field* ausklappen  customMemberLimit: ["", []]
-    }) 
-  } 
+    // this.chatroomForm = this.formBuilder.group({
+    //   "roomName": ["", [Validators.required, Validators.minLength(3), Validators.maxLength(40)]],
+    //   // TODO: wenn button  gedrückt -> dann zusätzliches *selecting only dropdown-input-field* ausklappen  customMemberLimit: ["", []]
+    // })
+  }
+
+  initSearchUserForm() {
+    this.searchUserForm = new FormGroup({
+      "searchTerm": new FormControl(null)
+    })
+  }
 
 
+  // TODO: eventuell user auch mit websockets fetchen: (effizienter als via http requests?)
+  getFilteredUser() {
+    this.searchUserForm.get("searchTerm").valueChanges.subscribe(
+      (searchTerm: string) => {
+        console.log("value changed to:", searchTerm.length);
+        if (searchTerm.length !== 0) {
+          this.fetchFilteredUsersSubscribtion = this.usersService.fetchFilteredUsers(searchTerm).subscribe(
+            (filteredUsersResData: FilteredUsersResponseData) => {
+              if (filteredUsersResData["filtered_users"]) {
+                console.log(filteredUsersResData["filtered_users"]);
+                this.filteredUsers = this.getTransformedUserList(filteredUsersResData["filtered_users"])
+              }
+              this.fetchFilteredUsersSubscribtion.unsubscribe()
+            }
+          )
+        }
+        // TODO: http get request mit searchterm -> filterUser
+        // wenn currentUser bereits einen Chatroom/Membership mit den jeweiligen  gesuchten/ausgewählten user hat, 
+        // dann redirect hzu diesen chatroom
+      }
+    ) 
+
+  }
+
+
+
+  getTransformedUserList(users: UserResponseData[]) {
+    var finalUsersList: User[] = [];
+
+    users.forEach(
+      (userResData: UserResponseData) => {
+        let user = new User(
+          userResData.uid.toString(), 
+          userResData.email, 
+          userResData.first_name, 
+          userResData.surname, 
+          userResData.bio
+        )
+        finalUsersList.push(user)
+      }
+    )
+    return finalUsersList
+
+  }
 
   onUserSelected(i) {
     // s. chatroom-list-component chatroomOpenedCheck() ähnlich
+    console.log("user-index: ", i , " selected");
+    this.contactSelected = true
+    this.selectedUser = this.filteredUsers[i]
+  }
+
+  onCancelPrivateMessage() {
+    this.contactSelected = false
+  }
+
+  onSendPrivateMessage() {
+
   }
 
 
