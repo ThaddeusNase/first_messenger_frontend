@@ -1,3 +1,7 @@
+.window-container {
+    width: 100%;
+}
+
 .window-header {
     position: fixed;
     height: 70px;
@@ -13,10 +17,10 @@
     background-color: darkgrey;
 } */
 
+
 .window-footer {
     position: fixed;
-    width: 100%;
-    height: 70px;
-    bottom: 0vh;
-    background-color: blue;
+    bottom: 10px;
+    left: 30%;
+    right: 0;
 }

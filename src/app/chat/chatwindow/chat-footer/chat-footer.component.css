@@ -1,0 +1,113 @@
+.chat-footer-container {
+    border-top: 1px solid rgba(150, 150, 150, 0.582);
+    /* background-color: blue; */
+    height: auto;
+    width: 100%;
+    text-align: center;
+    /* background-color: blue; */
+}
+
+.message-textarea-background {
+    margin: 10px 0px;
+    background: rgb(245, 245, 245);
+    border: 1px solid rgb(245, 245, 245);
+    border-radius: 8px;
+    width: 70%;
+    padding: 6px 10px 0px 10px;
+    vertical-align: center;
+    display: inline-block;
+}
+
+.message-textarea-background:hover{
+    -webkit-box-shadow: 0 0 10px rgb(163, 163, 163);
+        box-shadow: 0 0 10px rgb(163, 163, 163);
+}
+
+.message-textarea {
+    font-size: 0.9em;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    /* height: 100%; */
+    /* background: rgb(226, 226, 226); */
+    /* border: 1px solid rgba(150, 150, 150, 0.582);
+    border-radius: 8px; */
+    resize: none;
+    caret-color: black;
+    outline: none;
+}
+
+textarea::placeholder {
+    color: rgb(211, 211, 211)  
+}
+
+
+
+.send-message-button{
+    background-image: url("/assets/img/send-outline.svg");
+    background-size: 20px ;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: rgb(111, 185, 255);
+    border: 1px solid transparent;
+    border-radius: 20px;
+    margin-left: 12px;
+    outline: none;
+}
+
+.send-message-button:hover,
+.send-message-button:active {
+    -webkit-box-shadow: 0 0 10px rgb(163, 163, 163);
+        box-shadow: 0 0 10px rgb(163, 163, 163); 
+        outline: none;
+}
+
+.send-message-button.disabled-submit-btn {
+  background-color: rgb(148, 148, 148);
+}
+
+.send-message-button.disabled-submit-btn:hover,
+.send-message-button.disabled-submit-btn:active {
+  -webkit-box-shadow: none;
+        box-shadow: none;
+        outline: none;
+}
+
+  /* .mat-input-element {
+    caret-color: black;
+    border: black 1px solid;
+    background-color: none;
+    font-size: 16px;
+    padding: 5px 5px;
+  } */
+
+
+
+
+
+
+  /* ::ng-deep .mat-form-field-placeholder{
+  
+    color:black !important
+  }
+  
+  ::ng-deep .mat-focused .mat-form-field-placeholder{
+    
+    color:black !important;
+  }
+  
+  ::ng-deep .mat-form-field-underline .mat-form-field-ripple{
+    
+     background-color:white !important;
+  }
+  
+  ::ng-deep .mat-form-field-underline{
+    
+     background-color:white !important;
+  } */
+

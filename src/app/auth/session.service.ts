@@ -52,7 +52,6 @@ export class SessionService {
 
     // TODO: wird noch nicht benötigt
     deleteSession(user_id: string) {
-        
         this.http.delete<string>(
             `http://127.0.0.1:5000/session/${user_id}`
         ).pipe(catchError(this.handleErrors)).subscribe(

@@ -47,6 +47,9 @@ export class ChatComponent implements OnInit {
       }
     )
 
+    // TODO: mit observable erstetzen und besseres handeleing -> message jeweiligem chatroom/chatfeed zuordnen etc
+    this.chatService.observeMessages()
+
   }
 
 

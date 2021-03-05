@@ -210,7 +210,7 @@ input:focus {
     position: absolute;
     left: 20px;
     top: 35px;
-
+    cursor: pointer;
 }
 
 
@@ -225,8 +225,15 @@ app-user-entry {
 
 a {
     color: black;
-
 }
+
+app-chat-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+
 
 
 

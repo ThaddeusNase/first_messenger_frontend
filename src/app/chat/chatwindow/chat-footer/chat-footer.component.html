@@ -1,1 +1,18 @@
-<p>chat-footer works!</p>
+<div class="chat-footer-container"> 
+    <form [formGroup]="messageForm" (ngSubmit)="onSubmit()">
+        <div class="message-textarea-background">
+            <textarea 
+                autofocus
+                class="message-textarea"
+                matInput
+                matTextareaAutosize
+                matAutosizeMinRows="1"
+                matAutosizeMaxRows="3"
+                formControlName="messageTextArea"
+                placeholder="Type message here..."
+            >
+            </textarea>
+        </div>
+        <button [disabled]="messageForm.invalid" class="send-message-button" [ngClass]="{'disabled-submit-btn': messageForm.invalid}" type="submit"></button>
+    </form>
+</div>

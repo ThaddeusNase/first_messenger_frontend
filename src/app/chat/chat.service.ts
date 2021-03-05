@@ -11,12 +11,16 @@ import { SessionResponseData, SessionService } from '../auth/session.service';
 import { Chatroom } from '../shared/models/chatroom.model';
 import { MembershipModel } from '../shared/models/membership.model';
 import { MessageModel } from '../shared/models/message.model';
+import { webSocket } from "rxjs/webSocket";
 
 import { CurrentUser } from '../shared/models/currentuser.model';
 import { UsersService } from '../shared/services/users.service';
 import { UserResponseData } from '../shared/services/users.service'
+import { User } from '../shared/models/user.model';
 
 // TODO: interfaces in einer extra Datei innerhalb des chat-directory 
+// TODO:Eventuell Websocket Architecture nochmal überarbeiten s.:
+// https://javascript-conference.com/blog/real-time-in-angular-a-journey-into-websocket-and-rxjs/
 export interface RoomResponseData {
     name: string,
     id: number,
@@ -39,6 +43,12 @@ export interface UserChatroomsResponseData {
     all_user_chatrooms: RoomResponseData[]
 }
 
+export interface MessageData {
+    author_id: string;
+    delivery_time: Date; 
+    content: string
+    room_id: string
+}
 
 @Injectable({ providedIn: "root" })
 export class ChatService {
@@ -82,15 +92,17 @@ export class ChatService {
     }
 
 
-
-    joinChatroom(userId: number, chatroomId: number) {
-        return this.http.post<MembershipResponseData>("http://127.0.0.1:5000/membership",
-            {
-                user_id: userId,
-                chatroom_id: chatroomId
-            }
-        ).pipe(catchError(this.handleErrors))
-    }
+    // ----- STATTDESSEN s. joinMembersToChatroom() -------
+    // joinChatroom(userId: number, chatroomId: number) {
+    //     console.log("joinChatroom executed!");
+        
+    //     return this.http.post<MembershipResponseData>("http://127.0.0.1:5000/membership",
+    //         {
+    //             user_id: userId,
+    //             chatroom_id: chatroomId
+    //         }
+    //     ).pipe(catchError(this.handleErrors))
+    // }
 
 
 
@@ -100,6 +112,34 @@ export class ChatService {
         )
     }
 
+    joinMembersToChatroom(members_id_list: number[], room_id:number) {
+        return this.http.post<MembershipsResponseData>("http://127.0.0.1:5000/memberships_for_room/" + room_id,
+            {
+                members_ids: members_id_list
+            }
+        ).pipe(
+            map(
+                (resData: MembershipsResponseData) => {
+
+                    var allMemberships: MembershipModel[] = [];
+
+                    resData.memberships.forEach(membershipData => {
+                        const membershipObj = new MembershipModel(
+                            membershipData.id,
+                            new Date(membershipData.join_date),
+                            membershipData.user_id,
+                            membershipData.chatroom_id
+                        )
+                        allMemberships.push(membershipObj)
+                    })
+                    return {"memberships": allMemberships}
+                }
+            ),
+            catchError(this.handleErrors)
+        )
+
+
+    }
 
     getAllMembershipsForRoomId(room_id: number) {
         // returned MembershipMODEL[] array!!! kein MembershipResponseData[] array!!!
@@ -127,45 +167,27 @@ export class ChatService {
 
 
     // TODO: RecipientUser-Object statt recipientEmail 
-    sendMessage(msg: MessageModel, recipientEmail: string) {
-        console.log(msg);
-
-        // check ob partner/recipinet eine session id besitzt mit email 
-        // TODO: fetch by uid, von kontaktlist via "contacts = User[]" (= leeres User array)
-
-        // TODO: AUFPASSEN MIT ÜBERARBEITER USERRESPONSEDATA!!! (first_name und surname)
-        this.usersService.fetchUserByEmail(recipientEmail).pipe(exhaustMap(
-            (recipient: UserResponseData) => {
-                return this.sessionService.getSession(recipient.uid)
-            }
-        ), catchError(this.handleErrors))
-            .subscribe(
-                (sessionResData: SessionResponseData) => {
-
-                    if (sessionResData.sid && !sessionResData.session_expired) {
-                        console.log("--- sid: ", sessionResData.sid);
-                        this.sendViaWebSocket(msg)
-                    } else {
-                        console.log("--- sessionData: ", sessionResData);
-                        // this.sendViaHttp(msg, recipient)
-                    }
-                }
-            )
-    }
-
-
-
-    sendViaWebSocket(msg) {
+    sendMessage(msg: MessageData) {
         this.env.socketPrivate.emit("private_message", msg)
     }
+
+
+    observeMessages() {
+        this.env.socketPrivate.on("received_private_message", (msg: MessageData) => {
+            console.log("received_private_message: ", msg);    
+        })
+    }
+
+
 
 
 
     handleErrors(errorResponse: HttpErrorResponse) {
 
         var errorMsg = "unknown error occoured"
-        if (!errorResponse.message || !errorResponse.error.message) {
-            return throwError(errorMsg)
+        if (!errorResponse.error || !errorResponse.error.message) {
+            // console.error("---", errorResponse)
+            return throwError(errorResponse.error.message)
         }
 
         switch (errorResponse.error.message) {

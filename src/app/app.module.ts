@@ -23,7 +23,7 @@ import { ChatFooterComponent } from './chat/chatwindow/chat-footer/chat-footer.c
 import { UserEntryComponent } from './chat/chatroom-dialog/user-entry/user-entry.component';
 import { ProfileDropdownMenuComponent } from './header/profile-dropdown-menu/profile-dropdown-menu.component';
 import { ProfileComponent } from './profile/profile.component';
-import { AutoWidthDirective } from './shared/directives/autowidth.directive';
+import { MatFormFieldModule, MatInputModule } from '@angular/material';
 // import { ScrollingModule }
 
 
@@ -44,7 +44,6 @@ import { AutoWidthDirective } from './shared/directives/autowidth.directive';
     UserEntryComponent,
     ProfileDropdownMenuComponent,
     ProfileComponent,
-    AutoWidthDirective
   ],
   imports: [
     BrowserModule,
@@ -54,6 +53,8 @@ import { AutoWidthDirective } from './shared/directives/autowidth.directive';
     HttpClientModule,
     BrowserAnimationsModule,
     ScrollingModule,
+    MatFormFieldModule,
+    MatInputModule,
     // SocketIoModule.forRoot(config)
   ],
   providers: [],

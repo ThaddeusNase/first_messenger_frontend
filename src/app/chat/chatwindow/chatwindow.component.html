@@ -1,18 +1,21 @@
-<div class="window-header">
-    <div class="msg-header">
-        <h4> {{ chatpartner ? chatpartner.email : chatroom.name }} </h4>
-        <!-- <app-chat-header *ngIf="chatpartner" [chatpartner]="chatpartner"> </app-chat-header> -->
-        <!-- <app-chat-header *ngIf="chatroom" [chatroom]="chatroom"> </app-chat-header> -->
+<div class="window-container">
+    <div class="window-header">
+        <div class="msg-header">
+            <h4> {{ chatpartner ? chatpartner.email : chatroom.name }} </h4>
+            <!-- <app-chat-header *ngIf="chatpartner" [chatpartner]="chatpartner"> </app-chat-header> -->
+            <!-- <app-chat-header *ngIf="chatroom" [chatroom]="chatroom"> </app-chat-header> -->
+        </div>
+    </div>
+    
+    <div class="chat-content">
+    <!-- TODO: chatroom besser handeln -> chatroom NICHT auf Null setzen?! -> da wir reference für messages brauchen -->
+        <app-chat-feed [chatroom]="chatroom"></app-chat-feed>
+    </div>
+    
+    <div class="window-footer">
+        <app-chat-footer [chatroom]="chatroom" [initialMessage]="false"></app-chat-footer>
     </div>
 </div>
 
-<div class="chat-content">
-<!-- TODO: chatroom besser handeln -> chatroom NICHT auf Null setzen?! -> da wir reference für messages brauchen -->
-    <app-chat-feed [chatroom]="chatroom"></app-chat-feed>
-</div>
-
-<div class="window-footer">
-    <!-- <app-chat-footer></app-chat-footer> -->
-</div>
 
 

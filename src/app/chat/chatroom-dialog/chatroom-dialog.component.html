@@ -26,14 +26,18 @@
   </ul>
 
   <div class="private-message-container" [ngClass]="{'active': contactSelected}">
-    <div *ngIf="selectedUser" class="private-message-header">
+    <div class="private-message-header" *ngIf="selectedUser">
       <img (click)="onCancelPrivateMessage()" class="message-cancel-button" src="/assets/img/back-arrow-button.png" alt="cancel-button">
       <a [routerLink]="['/profile', selectedUser.id]">
         <app-user-entry [user]="selectedUser"></app-user-entry>
       </a>
     </div>
+
+    <div class="private-message-footer" *ngIf="selectedUser">
+      <app-chat-footer [recipient]="selectedUser" [initialMessage]="true"></app-chat-footer>
+    </div>
+    
   </div>
-  <button class="action-btn" (click)="onSendPrivateMessage()"> Send </button>
   
 
   <!-- <h2>Chatgroup Name</h2>

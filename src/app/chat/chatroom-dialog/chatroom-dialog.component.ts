@@ -160,48 +160,7 @@ export class ChatroomDialogComponent implements OnInit {
   }
 
 
-  createRoomAndJoin() {
-
-    const userData: {
-      email: string,
-      id: number,
-      _token: string,
-      _expirationDate: string
-    } = JSON.parse(localStorage.getItem("userData"))
-
-    var roomData: RoomResponseData = null;
-
-    this.chatService.createNewChatroom(this.chatroomForm.value.roomName).pipe(
-      take(1),
-      exhaustMap(
-        (roomResData: RoomResponseData) => {
-        roomData = roomResData;
-        const tmpNewChatroom = new Chatroom(roomResData.id, new Date(roomResData.creation_date), roomResData.name, roomResData.member_limit)
-        this.newChatroom = tmpNewChatroom
-        return this.chatService.joinChatroom(userData.id ,roomResData.id)
-        }
-      )
-    ).subscribe(
-      (membershipResData: MembershipResponseData) => {
-        this.saveEvent.emit(this.newChatroom)
-      },
-      (err: string) => {
-        this.requestError = err
-        console.log("---membership-post-request error: ",err);
-        this.errorMessageAnimtationTime()
-        // TODO: error animation
-        // MARK: wenn createNewCHatroom failed -> dann bereits erstellten chatroom wieder löschen
-        if (roomData) {
-          this.chatService.deleteChatroom(roomData.id.toString()).subscribe(
-            () => {
-              console.log(`chatroom ${roomData.name} with id: ${roomData.id} deleted`);
-            }
-          )
-        }
-      }
-
-    )
-  } 
+   
 
 
 
