@@ -1,11 +1,12 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Socket, SocketIoConfig } from 'ngx-socket-io';
 import { Session } from 'protractor';
 import { throwError } from 'rxjs';
 // import { lastValueFrom } from 'rxjs/operators';
 import { catchError, map } from 'rxjs/operators';
 import * as io from 'socket.io-client';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment'; 
 
 
 // TODO: alle Observables/Http Requests unsubscriben: 
@@ -19,33 +20,35 @@ export interface SessionResponseData {
     session_expired: boolean
 }
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
-    env = environment; 
+    updatedSessionId = this.socket.fromEvent<string>('update_sid');
 
-    // socket; 
-    // socketPrivate;
-    // userData: {emai}
+    constructor(
+        private http: HttpClient,
+        private socket: Socket
+    ){}
 
-    constructor(private http: HttpClient){}
 
     // ----- SOCKET-IO CONFIG -----
-    setupSocketConnection() {
-        
-        this.env.socket = io.connect("localhost:5000")                  // verwenden wenn neuer CLieint sich mit socket-server verbindet (request.sid wert wird generiert)
-        this.env.socketPrivate = io("localhost:5000/private")
-    }
+    // setupSocketConnection() {
+    //     this.env.socket = io.connect("localhost:5000")                  // verwenden wenn neuer CLieint sich mit socket-server verbindet (request.sid wert wird generiert)
+    //     this.env.socketPrivate = io("localhost:5000/private")
+    // }
 
     // userData als Parameter, da s. this.authService.currentUser.subscribe == circular dependency!!! 
+
+    // TODO: funktioniert das so mit der neuen SOcketIO angular architechture
     createSession() {
         const userData = JSON.parse(localStorage.getItem("userData"))
         const jwt_token_expirationDate = userData._expirationDate
-        if (!this.env.socket || !this.env.socketPrivate) {
-            throw new Error("wasn't able to connect to socket-server")
-        }
-        this.env.socketPrivate.emit("email", userData.email, jwt_token_expirationDate)
+        // if (!this.env.socket || !this.env.socketPrivate) {
+        //     throw new Error("wasn't able to connect to socket-server")
+        // }
+        this.socket.emit("email", userData.email, jwt_token_expirationDate)
     }
     
     
@@ -64,7 +67,7 @@ export class SessionService {
     // TODO: getSession() http request -> dann in sessionExist() callen
     getSession(user_id: number) {
         return this.http.get<SessionResponseData>(`http://127.0.0.1:5000/session/${user_id.toString()}`
-            )// .pipe(catchError(this.handleErrors))  
+            ).pipe(catchError(this.handleErrors))  
     }
     
 

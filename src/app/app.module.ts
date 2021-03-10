@@ -1,7 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { Injectable, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+import { SocketIoModule, SocketIoConfig, Socket } from 'ngx-socket-io';
 
 
 import { AppComponent } from './app.component';
@@ -25,6 +26,17 @@ import { ProfileDropdownMenuComponent } from './header/profile-dropdown-menu/pro
 import { ProfileComponent } from './profile/profile.component';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
 // import { ScrollingModule }
+
+
+const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
+
+// s. namespace-handeling in chat.service "/private"
+// --- Resources: --- 
+// https://github.com/rodgc/ngx-socket-io/issues/25
+// https://www.npmjs.com/package/ngx-socket-io
+// https://socket.io/docs/v3/namespaces/#Dynamic-namespaces
+
+
 
 
 @NgModule({
@@ -55,7 +67,7 @@ import { MatFormFieldModule, MatInputModule } from '@angular/material';
     ScrollingModule,
     MatFormFieldModule,
     MatInputModule,
-    // SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -138,32 +138,6 @@ export class ChatroomDialogComponent implements OnInit {
     this.contactSelected = false
   }
 
-  onSendPrivateMessage() {
-
-  }
-
-
-
-  onSubmit() {
-    // ----- ONsubmit für gruppe erstellen: ------
-    // TODO: Member/Kontakte hinzufügen!  memberLimit 
-    // if (this.chatroomForm.invalid) {
-    //   console.log("chatroomForm not valid");
-    //   // console.log(this.chatroomForm);
-    //   this.formError = this.getChatroomFormErrors(this.chatroomForm.controls.roomName.errors)
-    // } else {
-    //   this.createRoomAndJoin()
-    //   // this.saveEvent.emit() befindet sich in createRoomAndJoin() method, da erst geprüft werden muss,
-    //   // ob fehler this.chatservice.createNewChatroom() ODER this.chatservice.joinChatroom
-    //   // erst dann fenster schließen ansonsten fehlermeldung in Chatroom-dialog.component(.html) s. this.requestError
-    // }
-  }
-
-
-   
-
-
-
   onClose() {
     this.closeEvent.emit()
   }

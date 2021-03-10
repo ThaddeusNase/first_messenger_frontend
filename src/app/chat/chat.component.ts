@@ -38,7 +38,7 @@ export class ChatComponent implements OnInit {
 
   ngOnInit() {
     this.authService.autologin()
-    this.sessionService.setupSocketConnection()
+    // this.sessionService.setupSocketConnection()
     this.fetchUserChatrooms();
 
     this.authService.currentUser.subscribe(
@@ -48,7 +48,12 @@ export class ChatComponent implements OnInit {
     )
 
     // TODO: mit observable erstetzen und besseres handeleing -> message jeweiligem chatroom/chatfeed zuordnen etc
-    this.chatService.observeMessages()
+    this.chatService.observeMessage().subscribe(
+      (data:any) => {
+        console.log("---msg received: ", data);
+        
+      }
+    )
 
   }
 

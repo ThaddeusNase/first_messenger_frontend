@@ -25,7 +25,7 @@ export class ChatFooterComponent implements OnInit {
 
   errorMsg: string
 
-  @Output() messageSend = new EventEmitter<boolean>()
+  @Output() messageSent = new EventEmitter<boolean>()
 
   author: User;
   @Input() recipient: User;     // only used for the new chatroom creation (s. chatroom.name) -> TODO: später recipient-array: damit Memberships alle 
@@ -120,7 +120,7 @@ export class ChatFooterComponent implements OnInit {
     
     console.log("submited");
     this.messageForm.reset()
-    this.messageSend.emit(true)
+    this.messageSent.emit(true)
   }
 
 

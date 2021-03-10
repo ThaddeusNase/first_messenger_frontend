@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false, 
-  socket: null,
-  socketPrivate: null
+  // socket: null,
+  // socketPrivate: null
 };
 
 /*

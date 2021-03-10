@@ -3,8 +3,9 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { BehaviorSubject, throwError } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators'
 import { Router } from '@angular/router';
-import { SessionService } from './session.service';
+import { SessionResponseData, SessionService } from './session.service';
 import { CurrentUser } from '../shared/models/currentuser.model';
+import { Socket } from 'ngx-socket-io';
 
 // TODO: ----------------------------------------
 // localStorage + autologin/logout
@@ -28,7 +29,12 @@ export class AuthService {
   // darf auch nicht in constructor declariert werden, sonst error (iwas mit array)
   private tokenExpirationTimer: any
   
-  constructor(private sessionService: SessionService, private http: HttpClient, private router: Router) { }     
+  constructor(
+    private sessionService: SessionService, 
+    private http: HttpClient, 
+    private router: Router, 
+    private socket: Socket
+  ) {}     
 
   // currentUser wird benötigt für weitere reuests zB Freunde/ChatPartner adden oder für Chat-funktion()nachrichten scrheiben etc
   // allgm für funktionen für die man eingeloggt/authentifiziert sein muss
@@ -68,10 +74,6 @@ export class AuthService {
     const newUser = new CurrentUser(resData.email, resData.id, resData.token, expirationDate)
     this.currentUser.next(newUser)
     localStorage.setItem("userData", JSON.stringify(newUser))
-    // this.autologout(expirationDate.getTime() - new Date().getTime())
-
-    // session config
-    this.sessionService.setupSocketConnection()
     this.sessionService.createSession()
 
     this.router.navigate(["home"])
@@ -159,6 +161,7 @@ export class AuthService {
     console.log("localSotrageUser: ",localStorageUser);
     
 
+    this.closeSocketConnection(localStorageUser.id)
     localStorage.removeItem("userData")
     this.currentUser.next(null);
     // this.sessionService.deleteSession(localStorageUser.id)
@@ -170,6 +173,17 @@ export class AuthService {
     this.tokenExpirationTimer = null // zB timeout() in autoLogout stoppen, wenn user sich manuell via Logout Button ausloggt
     this.router.navigate(["auth"])
     console.log("user logged out");
+  }
+
+  closeSocketConnection(uid: number) {
+    console.log("closeSocketConnection uid:", uid);
+    this.sessionService.getSession(uid).subscribe(
+      (sessionResData: SessionResponseData) => {
+        let payload = {"sid": sessionResData.sid}
+        this.socket.emit("close_connection", payload)
+      }
+    ) 
+    
   }
 
   isAuthenticated() {

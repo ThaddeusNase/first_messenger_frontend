@@ -1,22 +1,9 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Injectable, OnInit } from "@angular/core";
 import { pipe, Subject, throwError } from 'rxjs';
 import { catchError, exhaustMap, map, tap } from 'rxjs/operators';
-import * as io from 'socket.io-client';
-import { environment } from 'src/environments/environment';
-import { isObject } from 'util';
-import { AuthService } from '../auth/auth.service';
-import { SessionResponseData, SessionService } from '../auth/session.service';
-import { Chatroom } from '../shared/models/chatroom.model';
 import { MembershipModel } from '../shared/models/membership.model';
-import { MessageModel } from '../shared/models/message.model';
-import { webSocket } from "rxjs/webSocket";
-
-import { CurrentUser } from '../shared/models/currentuser.model';
-import { UsersService } from '../shared/services/users.service';
-import { UserResponseData } from '../shared/services/users.service'
-import { User } from '../shared/models/user.model';
+import { Socket } from 'ngx-socket-io';
 
 // TODO: interfaces in einer extra Datei innerhalb des chat-directory 
 // TODO:Eventuell Websocket Architecture nochmal überarbeiten s.:
@@ -53,13 +40,21 @@ export interface MessageData {
 @Injectable({ providedIn: "root" })
 export class ChatService {
 
-    constructor(
-        private sessionService: SessionService,
-        private usersService: UsersService,
-        private http: HttpClient
-    ) { }
+    // connect: SocketNameSpace
+    // private: SocketNameSpace
 
-    env = environment;
+    constructor(
+        private http: HttpClient,
+        private socket: Socket
+    ) { 
+        // this.connect = new SocketNameSpace({url: 'http://localhost:5000',options: {} })
+        // this.private = new SocketNameSpace({url: 'http://localhost:5000/private', options: {}})
+    }
+
+    // env = environment;
+
+
+
 
     // TODO: danach join chatroom methode (http post request an membership Resource): mit admin == current user
     // und hinzugefügte user/kontakte0  
@@ -168,14 +163,23 @@ export class ChatService {
 
     // TODO: RecipientUser-Object statt recipientEmail 
     sendMessage(msg: MessageData) {
-        this.env.socketPrivate.emit("private_message", msg)
+        this.socket.emit("private_message", msg)
+    }
+
+    observeMessage() {
+        return this.socket.fromEvent("received_private_message")
     }
 
 
+    // observeMessages() {
+    //     this.env.socketPrivate.on("received_private_message", (msg: MessageData) => {
+    //         console.log("received_private_message: ", msg);    
+    //     })
+    // }
+
     observeMessages() {
-        this.env.socketPrivate.on("received_private_message", (msg: MessageData) => {
-            console.log("received_private_message: ", msg);    
-        })
+        // this.sessionService.connectSocket
+        
     }
 
 
