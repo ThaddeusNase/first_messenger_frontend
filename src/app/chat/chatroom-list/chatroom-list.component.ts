@@ -3,7 +3,8 @@ import { Component, OnInit, Output, EventEmitter, Input, SimpleChanges, ChangeDe
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { Chatroom } from 'src/app/shared/models/chatroom.model';
-import { ChatService } from '../chat.service';
+import { MessageModel } from 'src/app/shared/models/message.model';
+import { ChatService, MessageData } from '../chat.service';
 
 @Component({
   selector: 'app-chatroom-list',
@@ -17,6 +18,8 @@ export class ChatroomListComponent implements OnInit {
   @Input() chatrooms: Chatroom[] = [];
   openedChatroom: Chatroom;
 
+  newMessages: MessageModel[] =   []
+
 
   constructor(
     private router: Router, 
@@ -26,6 +29,13 @@ export class ChatroomListComponent implements OnInit {
 
 
   ngOnInit() {
+    // TODO: mit observable erstetzen und besseres handeleing -> message jeweiligem chatroom/chatfeed zuordnen etc
+    this.chatService.observeMessage().subscribe(
+      (msgData: MessageData) => {
+        const newMessage: MessageModel = new MessageModel(msgData.id, msgData.content, msgData.delivery_time, +msgData.room_id, +msgData.author_id)
+
+      }
+    )
   }
 
   onOpenChatroom(i) {
@@ -35,6 +45,8 @@ export class ChatroomListComponent implements OnInit {
   }
 
   chatroomOpenedCheck(i) {
+    // console.log("---checked chatroom: ", this.chatrooms[i]);
+    
     if (this.openedChatroom && this.chatrooms && this.chatrooms[i].id === this.openedChatroom.id) {
       return true 
     }

@@ -12,7 +12,6 @@ export class AuthFormGuardService implements CanActivate {
 
     // wird cabActivate aufgerufen sobald AuthFormGuardService klasse init wird?
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | boolean {
-        console.log("---canActivated executed");
         if (this.authService.isAuthenticated()) {
             // router.navigate .. (lastCurrentRoute)
             this.location.back()

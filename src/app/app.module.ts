@@ -25,6 +25,8 @@ import { UserEntryComponent } from './chat/chatroom-dialog/user-entry/user-entry
 import { ProfileDropdownMenuComponent } from './header/profile-dropdown-menu/profile-dropdown-menu.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
+import { ChatBubbleComponent } from './chat/chatwindow/chat-feed/chat-bubble/chat-bubble.component';
+import { AutoLineBreakDirective } from './shared/directives/autoLineBreak.directive';
 // import { ScrollingModule }
 
 
@@ -56,6 +58,8 @@ const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
     UserEntryComponent,
     ProfileDropdownMenuComponent,
     ProfileComponent,
+    ChatBubbleComponent,
+    AutoLineBreakDirective
   ],
   imports: [
     BrowserModule,
@@ -69,6 +73,7 @@ const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
     MatInputModule,
     SocketIoModule.forRoot(config),
   ],
+  exports: [AutoLineBreakDirective],
   providers: [],
   bootstrap: [AppComponent]
 })

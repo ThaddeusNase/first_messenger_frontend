@@ -7,7 +7,9 @@ import { Chatroom } from 'src/app/shared/models/chatroom.model';
 import { MembershipModel } from 'src/app/shared/models/membership.model';
 import { CurrentUser } from 'src/app/shared/models/currentuser.model';
 import { UserResponseData, UsersService } from 'src/app/shared/services/users.service';
-import { ChatService, RoomResponseData } from '../chat.service';
+import { ChatService, MessageData, RoomResponseData } from '../chat.service';
+import { MessageModel } from 'src/app/shared/models/message.model';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Component({
   selector: 'app-chatwindow',
@@ -19,6 +21,7 @@ export class ChatwindowComponent implements OnInit {
   chatroom: Chatroom;
   chatpartner: UserResponseData;
 
+  messages: MessageModel[] = []
   memberhsips: MembershipModel[] = []
 
 
@@ -34,13 +37,33 @@ export class ChatwindowComponent implements OnInit {
 
 
   ngOnInit() {
-    this.fetchChatroomOrChatrpartner()
+    // this.fetchChatroomOrChatpartner()
+    this.fetchResolvedData()
   }
 
-  fetchChatroomOrChatrpartner() {
+  fetchResolvedData() {
     this.activatedRoute.data.subscribe(
       (data: Data) => {
-        var resolvedData = data["openedChatroomData"]
+        const roomResData: RoomResponseData = data["openedChatroomData"]
+        const chatroomObj: Chatroom = new Chatroom(roomResData.id, new Date(roomResData.creation_date), roomResData.name, roomResData.member_limit)
+
+        const messagesForRoom: MessageModel[] = data["messagesForRoom"]
+
+        this.chatroom = chatroomObj 
+        this.messages = messagesForRoom
+      } 
+    )
+  
+  }
+
+
+
+
+  // TODO: fetchChatroomOrChatrpartner refactoren oder komplett lösschen
+  fetchChatroomOrChatpartner() {
+    this.activatedRoute.data.subscribe(
+      (data: Data) => {
+        var resolvedData = data["openedChatroomData"]        
         // wenn resolvedData das Property .member_limit besitzt: dann ist resolvedData == UserResponseData
         // (d.h. chatgroup hat > 2 member)
         if (resolvedData.member_limit !== undefined) {
@@ -60,35 +83,11 @@ export class ChatwindowComponent implements OnInit {
 
 
   
-  onSubmit() {
+  onMessageSent(msgData: MessageData) {
+    // TODO: handle messageid == null -> optional in MessageData?!
+    const newMessage: MessageModel = new MessageModel(msgData.id, msgData.content, msgData.delivery_time, +msgData.room_id, +msgData.author_id)
+    this.messages.push(newMessage)
 
-    // const recipientEmail = this.sendMsgForm.form.controls.email.value
-    // const currentUid = +this.current_user.id
-    // const deliveryDate = new Date()
-    // const msgContent = this.sendMsgForm.form.controls.msg.value
-
-    // const newMessage = new MessageModel(recipientEmail, currentUid, deliveryDate, msgContent)
-    // console.log("---", newMessage);
-
-    // // this.usersService.fetchUserByEmail(recipientEmail).subscribe(
-    // //   (userResData)
-
-    // // )
-    // if (this.sendMsgForm.valid) {
-    //   // TODO: fetch by uid, von kontaktlist via "contacts = User[]" (= leeres User array)
-    //   // this.chatService.sendMessage(newMessage, User(...))
-
-    //   this.chatService.sendMessage(newMessage, newMessage.recipient_email)
-
-      // this.sessionService.getSession(32).subscribe(
-      //   (resData: SessionResponseData) => {
-
-      //     console.log(resData);
-          
-      //   }
-      // )
-        
-    // }
   }
 
   

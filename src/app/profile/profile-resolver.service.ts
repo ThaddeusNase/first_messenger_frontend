@@ -15,11 +15,7 @@ export class ProfileResolverService implements Resolve<UserResponseData> {
     // Observable kann somit auch string(==ErrorMessage) oder UserResponseData zurückgeben
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UserResponseData> | Promise<UserResponseData> | UserResponseData   {
         const url = route.url
-        const uid: string = url[1].path
-        console.log(url);
-        
-        console.log("---selected UserId: ", uid);
-        
+        const uid: string = url[1].path                
         return this.usersService.fetchUserByUid(uid)
     }
     

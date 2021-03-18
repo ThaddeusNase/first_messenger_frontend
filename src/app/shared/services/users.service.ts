@@ -61,7 +61,6 @@ export class UsersService {
     }
 
     updateUser(user: User) {
-        console.log("---user: ", user);
         
         // TODO: refactor put request: nur uid in headers, den rest in body!!!
         return this.http.put<UserResponseData>("http://127.0.0.1:5000/user", {} ,{

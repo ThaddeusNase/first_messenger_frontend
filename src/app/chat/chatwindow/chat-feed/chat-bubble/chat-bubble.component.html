@@ -1,0 +1,11 @@
+<div class="message-bubble-container" [ngClass]="{'current-user': +currentUser.id == message.authorUid}">
+    <div class="message-string">
+        {{ message.content }}
+    </div>
+    <div class="message-creation-date">
+        <!-- RESOURCE: https://www.codegrepper.com/code-examples/javascript/angular+date+pipe+24+hour+format#:~:text=%E2%80%9Cangular%20date%20pipe%2024%20hour%20format%E2%80%9D%20Code%20Answer's&text='short'%3A%20equivalent%20to%20',%2C%209%3A03%20AM).&text='medium'%3A%20equivalent%20to%20',%3A03%3A01%20AM).&text='long'%3A%20equivalent%20to%20',01%20AM%20GMT%2B1). -->
+        <!-- {{ message.creationDate * 1000 | date: 'M/d/yy, h:mm a' }} -->
+        <!-- TODO: wie bei whatsapp, immer kurz ne Einblendung des datums wenn man scrollt -->
+        {{ message.creationDate * 1000 | date: 'h:mm a' }}
+    </div>
+</div>

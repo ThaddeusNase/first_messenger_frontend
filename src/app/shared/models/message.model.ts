@@ -5,7 +5,6 @@ export class MessageModel {
         public creationDate: Date,
         public chatroomId: number,
         public authorUid: number, 
-        
         // public delivery_time: Date,
     ) {
 

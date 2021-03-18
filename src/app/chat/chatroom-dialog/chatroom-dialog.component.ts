@@ -8,6 +8,7 @@
 import { Component, Inject, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatFormFieldControl, MAT_DIALOG_DATA } from '@angular/material';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { exhaustMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -26,7 +27,10 @@ import { RoomResponseData } from "../chat.service"
 export class ChatroomDialogComponent implements OnInit {
 
   chatroomForm: FormGroup;
+
   newChatroom: Chatroom;
+  chatPartners: User[] = []
+  // commonMemberships: MembershipResponseData[] = []       -> jetzt in 
   filteredUsers: User[] = [];
   contactSelected = false;
   selectedUser: User;
@@ -48,50 +52,54 @@ export class ChatroomDialogComponent implements OnInit {
     private formBuilder: FormBuilder,
     private chatService: ChatService,
     private authService: AuthService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private router: Router
     // @Inject(MAT_DIALOG_DATA) public data: {name: string}, // @Inject... public data benötigt, wenn wir zB datten von chatroom-list in chatroom-dialog übergeben wollen
   ) { }
 
   ngOnInit() {
     this.fetchCurrentUser()
     this.initSearchUserForm()
+    this.fetchChatPartners()
     this.getFilteredUser()
-
-    
-    
     // this.chatroomForm = this.formBuilder.group({
     //   "roomName": ["", [Validators.required, Validators.minLength(3), Validators.maxLength(40)]],
     //   // TODO: wenn button  gedrückt -> dann zusätzliches *selecting only dropdown-input-field* ausklappen  customMemberLimit: ["", []]
     // })
   }
 
+  
   fetchCurrentUser() {
     this.authService.currentUser.subscribe(
       (currUser: CurrentUser) => {
         this.currentUser = currUser
-        console.log(currUser);
-        
       }
     )
   }
+    
+    initSearchUserForm() {
+      this.searchUserForm = new FormGroup({
+        "searchTerm": new FormControl(null)
+      })
+    }
+    
 
-  initSearchUserForm() {
-    this.searchUserForm = new FormGroup({
-      "searchTerm": new FormControl(null)
-    })
-  }
-
-
-  // TODO: eventuell user auch mit websockets fetchen: (effizienter als via http requests?)
-  getFilteredUser() {
-    this.searchUserForm.get("searchTerm").valueChanges.subscribe(
-      (searchTerm: string) => {
-        console.log("value changed to:", searchTerm.length);
+    fetchChatPartners() {
+      this.chatService.getAllChatpartners(+this.currentUser.id).subscribe(
+        (fetched_partners: User[]) => {
+          this.chatPartners = fetched_partners
+        }
+      )
+    }
+    
+    // TODO: eventuell user auch mit websockets fetchen: (effizienter als via http requests?)
+    getFilteredUser() {
+      this.searchUserForm.get("searchTerm").valueChanges.subscribe(
+        (searchTerm: string) => {
         if (searchTerm.length !== 0) {
           this.fetchFilteredUsersSubscribtion = this.usersService.fetchFilteredUsers(searchTerm).subscribe(
             (filteredUsersResData: FilteredUsersResponseData) => {
               if (filteredUsersResData["filtered_users"]) {
-                console.log(filteredUsersResData["filtered_users"]);
                 this.filteredUsers = this.getTransformedUserList(filteredUsersResData["filtered_users"])
               }
               this.fetchFilteredUsersSubscribtion.unsubscribe()
@@ -103,9 +111,7 @@ export class ChatroomDialogComponent implements OnInit {
         // dann redirect hzu diesen chatroom
       }
     ) 
-
   }
-
 
 
   getTransformedUserList(users: UserResponseData[]) {
@@ -124,21 +130,54 @@ export class ChatroomDialogComponent implements OnInit {
       }
     )
     return finalUsersList
-
   }
 
+  
   onUserSelected(i) {
     // s. chatroom-list-component chatroomOpenedCheck() ähnlich
-    console.log("user-index: ", i , " selected");
     this.contactSelected = true
     this.selectedUser = this.filteredUsers[i]
-  }
+    
+    // TODO: wenn der selektierte user bereits ein chatpartner ist  ist, dann automatisch dort hin navigieren
+    // s. chatService.
+    // TODO: tsa
+    this.chatPartners.forEach(
+      (chatPartner: User) => {
+        if (chatPartner.id === this.selectedUser.id)  {
+          // TODO: checken welcher chatroom einen memberlimit == 2 hat -> dann zu den room navigierten
+          // TODO: close chatdialog
+          this.navigateToCommonChatpartnersRoom(+this.currentUser.id, +chatPartner.id)
+          return
+        }
+      }
+      )
+    }
+    
 
-  onCancelPrivateMessage() {
-    this.contactSelected = false
+    // TODO: eventuell mit subscribtion unsubscriben
+    navigateToCommonChatpartnersRoom(current_uid: number, chatpartner_uid: number) {
+      this.chatService.fetchCommonMembershipsOfUserAndChatPartner(current_uid, chatpartner_uid).subscribe(
+        (membershipsData: MembershipResponseData[]) => {
+          // console.log("common_roomid[0]", membershipsData[0].chatroom_id);
+          
+          this.router.navigate(["chat", membershipsData[0].chatroom_id])
+          this.closeEvent.emit()
+          
+        }
+      )
+    }
+    
+
+    onCancelPrivateMessage() {
+      this.contactSelected = false
   }
 
   onClose() {
+    this.closeEvent.emit()
+  }
+
+  onSave(newChatroom: Chatroom) {
+    this.saveEvent.emit(newChatroom)    
     this.closeEvent.emit()
   }
 

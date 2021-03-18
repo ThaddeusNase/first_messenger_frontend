@@ -4,6 +4,9 @@ import { pipe, Subject, throwError } from 'rxjs';
 import { catchError, exhaustMap, map, tap } from 'rxjs/operators';
 import { MembershipModel } from '../shared/models/membership.model';
 import { Socket } from 'ngx-socket-io';
+import { MessageModel } from '../shared/models/message.model';
+import { User } from '../shared/models/user.model';
+import { UserResponseData } from '../shared/services/users.service';
 
 // TODO: interfaces in einer extra Datei innerhalb des chat-directory 
 // TODO:Eventuell Websocket Architecture nochmal überarbeiten s.:
@@ -19,7 +22,7 @@ export interface MembershipResponseData {
     id: number,
     user_id: number,
     chatroom_id: number,
-    joinm_date: string
+    join_date: string
 }
 
 export interface MembershipsResponseData {
@@ -30,15 +33,30 @@ export interface UserChatroomsResponseData {
     all_user_chatrooms: RoomResponseData[]
 }
 
+export interface UserChatpartnersResponseData {
+    all_user_chat_partners: UserResponseData[]
+}
+
 export interface MessageData {
     author_id: string;
     delivery_time: Date; 
     content: string
     room_id: string
+    id?: number;            // optional, da bei der erstellung (via socketio) auf client side noch keine id initialisiert wird (erst bei response)
+}
+
+export interface MessagesForRoomResponseData {
+    room_messages: MessageData[]
+}
+
+export interface CommonChatpartnerMembershipsResponseData {
+    common_memberships: MembershipResponseData[]
 }
 
 @Injectable({ providedIn: "root" })
 export class ChatService {
+
+    allChatPartners = new Subject<User[]>()
 
     // connect: SocketNameSpace
     // private: SocketNameSpace
@@ -86,20 +104,29 @@ export class ChatService {
         }).pipe(catchError(this.handleErrors))
     }
 
-
-    // ----- STATTDESSEN s. joinMembersToChatroom() -------
-    // joinChatroom(userId: number, chatroomId: number) {
-    //     console.log("joinChatroom executed!");
-        
-    //     return this.http.post<MembershipResponseData>("http://127.0.0.1:5000/membership",
-    //         {
-    //             user_id: userId,
-    //             chatroom_id: chatroomId
-    //         }
-    //     ).pipe(catchError(this.handleErrors))
-    // }
-
-
+    getAllChatpartners(userId: number) {
+        return this.http.get<UserChatpartnersResponseData>("http://127.0.0.1:5000/user_chatpartners/" + userId).pipe(
+            map(
+                (resData: UserChatpartnersResponseData) => {
+                    let chatPartners: User[] = []
+                    resData["all_user_chat_partners"].forEach(
+                        (userResData: UserResponseData) => {
+                            const chatPartner: User = new User(
+                                userResData.uid.toString(),
+                                userResData.email, 
+                                userResData.first_name, 
+                                userResData.surname, 
+                                userResData.bio
+                            )
+                            chatPartners.push(chatPartner)
+                        }
+                    )
+                    return chatPartners
+                }
+            ),
+            catchError(this.handleErrors)
+        )
+    }
 
     getAllChatrooms(userId: number) {
         return this.http.get<UserChatroomsResponseData>("http://127.0.0.1:5000/user_chatrooms/" + userId).pipe(
@@ -141,7 +168,6 @@ export class ChatService {
         return this.http.get<MembershipsResponseData>("http://127.0.0.1:5000/memberships_for_room/" + room_id).pipe(
             map(
                 (resData: MembershipsResponseData) => {
-
                     var allMemberships: MembershipModel[] = [];
 
                     resData.memberships.forEach(membershipData => {
@@ -160,6 +186,18 @@ export class ChatService {
         )
     }
 
+    fetchCommonMembershipsOfUserAndChatPartner(current_uid: number, chatparnter_uid: number) {
+        return this.http.get<CommonChatpartnerMembershipsResponseData>("http://127.0.0.1:5000/common_user_chatpartner_memberships/" + current_uid + "/" + chatparnter_uid).pipe(
+            map(
+                (resData :CommonChatpartnerMembershipsResponseData) => {
+                    return resData["common_memberships"]
+                }
+            ),
+            catchError(this.handleErrors)
+        )
+
+    }
+
 
     // TODO: RecipientUser-Object statt recipientEmail 
     sendMessage(msg: MessageData) {
@@ -170,19 +208,23 @@ export class ChatService {
         return this.socket.fromEvent("received_private_message")
     }
 
-
-    // observeMessages() {
-    //     this.env.socketPrivate.on("received_private_message", (msg: MessageData) => {
-    //         console.log("received_private_message: ", msg);    
-    //     })
-    // }
-
-    observeMessages() {
-        // this.sessionService.connectSocket
-        
+    observeNewMessageForRoom(room_id: number) {
+        return this.socket.fromEvent(`received_private_message_room_${room_id}`)
     }
 
 
+    fetchMessagesForRoom(id: number) {
+        return this.http.get<MessagesForRoomResponseData>("http://127.0.0.1:5000/messages_for_room/" + id).pipe(
+            map((messagesResData:MessagesForRoomResponseData) => {
+                const messagesData: MessageData[] = messagesResData["room_messages"]
+                let convertedData: MessageModel[] = messagesData.map((msgData: MessageData) => {
+                    return new MessageModel(msgData.id, msgData.content, msgData.delivery_time, +msgData.room_id, +msgData.author_id)
+                })
+                return convertedData
+            }),
+            catchError(this.handleErrors)
+        )
+    }
 
 
 
@@ -206,6 +248,12 @@ export class ChatService {
                 break;
             case "ROOM_DOES_NOT_EXIST":
                 errorMsg = "chatroom does not exist"
+                break;
+            case "ROOM_ID_NOT_PROVIDED":
+                errorMsg="chatroom_id was not provided"
+                break;
+            case "NO_COMMON_MEMBERSHIPS_FOUND":
+                errorMsg = "currentUser and chatpartner don't have any common chatrooms"
         }
         return throwError(errorMsg)
     }

@@ -15,7 +15,6 @@ export class AutoWidthDirective implements OnInit {
 
     ngOnInit(): void {
         // this.el.nativeElement.setAttribute("size", this.el.nativeElement.value.length)
-        console.log("----------init");
         
 
     }

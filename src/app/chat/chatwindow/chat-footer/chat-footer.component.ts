@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
-import { Component, ElementRef, OnInit, Output, ViewChild, EventEmitter, Input } from '@angular/core';
+import { Component, ElementRef, OnInit, Output, ViewChild, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { error } from 'console';
@@ -19,13 +19,14 @@ import { ChatService, MembershipsResponseData, MessageData, RoomResponseData } f
   templateUrl: './chat-footer.component.html',
   styleUrls: ['./chat-footer.component.css']
 })
-export class ChatFooterComponent implements OnInit {
+export class ChatFooterComponent implements OnInit{
 
   // TODO: @Input() chatroom -> für message service damit man nachricht korrekt versenden/speichern kann
 
   errorMsg: string
 
-  @Output() messageSent = new EventEmitter<boolean>()
+  @Output() messageSent = new EventEmitter<MessageData>()
+  @Output() chatroomCreated = new EventEmitter<Chatroom>()
 
   author: User;
   @Input() recipient: User;     // only used for the new chatroom creation (s. chatroom.name) -> TODO: später recipient-array: damit Memberships alle 
@@ -57,10 +58,8 @@ export class ChatFooterComponent implements OnInit {
       // TODO: eventuell refactoren -> dass die erstellung vom initialen chatroom & dessen memberships KOMPLETT via service handelt werden 
       this.fetchGroupMembers()
     }
-    
-
-    // this.initForm()
   }
+
 
   fetchGroupMembers() {
     // TODO: überarbeiten sobald group chat möglich
@@ -77,8 +76,6 @@ export class ChatFooterComponent implements OnInit {
       }
     )).subscribe(
       (roomResData: RoomResponseData) => {
-        console.log("chatroom fetched: ", roomResData);
-        
         this.chatroom = new Chatroom(+roomResData, new Date(roomResData.creation_date), roomResData.name, roomResData.member_limit)
       }
     )
@@ -117,10 +114,8 @@ export class ChatFooterComponent implements OnInit {
      else {
       this.chatService.sendMessage(messageData)
     }
-    
-    console.log("submited");
     this.messageForm.reset()
-    this.messageSent.emit(true)
+    this.messageSent.emit(messageData)
   }
 
 
@@ -130,6 +125,8 @@ export class ChatFooterComponent implements OnInit {
         take(1),
         exhaustMap(
           (roomResData: RoomResponseData) => {
+            const newRoom: Chatroom = new Chatroom(roomResData.id, new Date(roomResData.creation_date), roomResData.name, roomResData.member_limit)            
+            this.chatroomCreated.emit(newRoom)    // TODO: refactor this.messageSent.emit() ist eigentlich this.chatroomCreated.emit()
             messageData["room_id"] = roomResData.id.toString()
             let memberIdList: number[] = this.getMemberIdList(this.groupMembers)
             return this.chatService.joinMembersToChatroom(memberIdList,roomResData.id)
@@ -165,7 +162,7 @@ export class ChatFooterComponent implements OnInit {
     var memberIdList: number[] = this.getMemberIdList(users)
     this.chatService.joinMembersToChatroom(memberIdList, room_id).subscribe(
       (memberships: MembershipsResponseData) => {
-        console.log("---memberships: ",memberships);
+        // console.log("---memberships: ",memberships);
       }
     )
     

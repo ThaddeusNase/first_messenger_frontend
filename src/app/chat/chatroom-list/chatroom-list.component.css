@@ -1,6 +1,8 @@
 
-/* .chatroom-container {
-    position: relative;
+.chatroom-container {
+    /* max-width: 280px; */
+    
+    /* position: relative;
     height: 100px;
     width: 300px;
     margin: 10px;
@@ -10,8 +12,8 @@
 
     background-color: rgb(184, 184, 184);
     border: 1px solid blue;
-    border-radius: 8px;
-} */
+    border-radius: 8px; */
+} 
 
 
 cdk-virtual-scroll-viewport {

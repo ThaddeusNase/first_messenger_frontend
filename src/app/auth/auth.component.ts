@@ -77,11 +77,10 @@ export class AuthComponent implements OnInit {
   authenticate(authRequest: Observable<AuthResponseData>) {
     authRequest.subscribe(
       (responseData: AuthResponseData) => {
-        console.log("auth Successful", responseData);
         this.isLoading = false
       }
     ,(errorMessage) => {
-      console.log("---",errorMessage);
+      console.error("---",errorMessage);
       
       this.errorMsg = errorMessage
       this.errorMessageAnimtationTime()

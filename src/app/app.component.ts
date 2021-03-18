@@ -23,7 +23,6 @@ export class AppComponent implements OnInit {
     this.sessionService.updatedSessionId.subscribe(
       (newSid: string) => {
         this.sessionService.createSession()
-        console.log("EXECUTED SOCKET IO ");
         console.log("--- session_id upadated (reconnection of Socketio): ", newSid);
         
       }

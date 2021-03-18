@@ -38,11 +38,6 @@ export class ProfileComponent implements OnInit {
     this.authService.currentUser.subscribe(
       (user: CurrentUser) => {
         // s. profile.component.html currentUser wird hier bereits gefetched
-        console.log("currentUser: ", user);
-        console.log("fetchedUser: ", this.user);
-        
-        console.log(this.user.id === user.id);
-        
         this.isCurrentUser = this.user.id === user.id ? true : false
       }
     )
@@ -79,9 +74,7 @@ export class ProfileComponent implements OnInit {
       (data: Data)  => {
         // TODO: data kann auch st
         const userData: UserResponseData = data["userData"]
-
         const resolvedUser = new User(userData.uid.toString(), userData.email, userData.first_name, userData.surname, userData.bio )
-        console.log("fetched resolve user: ", resolvedUser);
         if(resolvedUser) {
           this.user = resolvedUser
         } else {
@@ -112,12 +105,8 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("submited");
     this.handleHideControl()
     this.updateUser()
-    
-    
-
   }
 
   updateUser() {
@@ -126,9 +115,7 @@ export class ProfileComponent implements OnInit {
     const firstname = this.editProfileForm.controls.firstName.value ? this.editProfileForm.controls.firstName.value : this.user.firstname
     const bio = this.editProfileForm.controls.bio.value ? this.editProfileForm.controls.bio.value : this.user.bio
 
-    const updatedUser = new User(this.user.id, this.user.email, firstname, surname ,bio)
-    console.log("updatedUser: ", updatedUser);
-    
+    const updatedUser = new User(this.user.id, this.user.email, firstname, surname ,bio)    
     this.usersService.updateUser(updatedUser).subscribe(
       (userResData: UserResponseData) => {
         console.log(userResData);

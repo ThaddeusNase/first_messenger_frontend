@@ -10,19 +10,20 @@ import { ChatroomsResolverService } from './chat/chatrooms-resolver.service';
 import { OpenedChatroomResolverService } from './chat/chatwindow/openedChatroom-resolver.service';
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileResolverService } from './profile/profile-resolver.service';
+import { MessagesForOpenedChatroomService } from './chat/chatwindow/messagesForOpenedChatroom-resolver.service';
 
 
 const routes: Routes = [
   {path: "auth", component: AuthComponent, canActivate: [AuthFormGuardService]},
   {path: "home", component: HomeComponent},
   {path: "chat", component: ChatComponent, canActivate: [AuthGuardService], resolve: {chatrooms: ChatroomsResolverService} , children: [
-    {path: ":room", component: ChatwindowComponent, resolve: {openedChatroomData: OpenedChatroomResolverService} }
+    {path: ":room", component: ChatwindowComponent, resolve: {openedChatroomData: OpenedChatroomResolverService, messagesForRoom: MessagesForOpenedChatroomService} }
   ]},
   {path: "profile/:id", component: ProfileComponent, canActivate: [AuthGuardService], resolve: {userData: ProfileResolverService}}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: "reload"})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -9,11 +9,11 @@
     
     <div class="chat-content">
     <!-- TODO: chatroom besser handeln -> chatroom NICHT auf Null setzen?! -> da wir reference für messages brauchen -->
-        <app-chat-feed [chatroom]="chatroom"></app-chat-feed>
+        <app-chat-feed [chatroom]="chatroom" [messages]="messages"></app-chat-feed>
     </div>
     
     <div class="window-footer">
-        <app-chat-footer [chatroom]="chatroom" [initialMessage]="false"></app-chat-footer>
+        <app-chat-footer (messageSent)="onMessageSent($event)" [chatroom]="chatroom" [initialMessage]="false"></app-chat-footer>
     </div>
 </div>
 

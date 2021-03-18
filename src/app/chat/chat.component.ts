@@ -23,10 +23,7 @@ export class ChatComponent implements OnInit {
   chatroomDialogoOpened = false
 
   constructor(
-      private sessionService: SessionService, 
       private authService: AuthService, 
-      private chatService: ChatService,
-      private usersService: UsersService,
       private activatedRoute: ActivatedRoute
   ){ }
 
@@ -44,14 +41,6 @@ export class ChatComponent implements OnInit {
     this.authService.currentUser.subscribe(
       (user: CurrentUser) => {
         this.current_user = user
-      }
-    )
-
-    // TODO: mit observable erstetzen und besseres handeleing -> message jeweiligem chatroom/chatfeed zuordnen etc
-    this.chatService.observeMessage().subscribe(
-      (data:any) => {
-        console.log("---msg received: ", data);
-        
       }
     )
 
@@ -85,7 +74,6 @@ export class ChatComponent implements OnInit {
   }
 
   onSaveChatroom(newChatroom: Chatroom) {
-    console.log("new Chatroom: ", newChatroom);
     this.chatroomDialogoOpened = false
     // https://stackoverflow.com/questions/55369253/cdkvirtualfor-not-rendering-new-items
     // s. stackoverflow: chatroom muss mutated werden, damit verändertes == NEUE chatrooms[]- INSTANZ

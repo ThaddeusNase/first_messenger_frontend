@@ -64,9 +64,7 @@ export class AuthService {
 
 
   // ------ HELPER ------
-  handleAuthentication(resData: AuthResponseData) {
-    console.log("hanleAuthendtication executed");
-    
+  handleAuthentication(resData: AuthResponseData) {    
     const expiresIn = +resData.expiresIn * 1000
     const currentTime = new Date().getTime()
     const expirationDate = new Date(expiresIn + currentTime)
@@ -107,7 +105,7 @@ export class AuthService {
         break;         
       default:
         errorMessage = "Unknown Error occoured (default)"
-        console.log(responseError);
+        console.error(responseError);
         break;
     }
     return throwError(errorMessage)
@@ -115,7 +113,6 @@ export class AuthService {
 
 
   autologin() {
-    console.log("--- autologin() executed");
 
     const userData: {
       email: string,
@@ -129,7 +126,6 @@ export class AuthService {
     }
 
     else {
-      console.log("user fetched through loaclstorage");
       const user: CurrentUser = new CurrentUser(userData.email, userData.id.toString(), userData._token, new Date(userData._expirationDate))
       if (user && user.token) {
         this.currentUser.next(user);
@@ -137,7 +133,6 @@ export class AuthService {
       } else {
         console.log("currentUser = null");
         this.logout()
-        console.log("user invalid");
       } 
     }
     
@@ -157,9 +152,7 @@ export class AuthService {
   }
 
   logout() {
-    let localStorageUser = JSON.parse(localStorage.getItem("userData"))
-    console.log("localSotrageUser: ",localStorageUser);
-    
+    let localStorageUser = JSON.parse(localStorage.getItem("userData"))    
 
     this.closeSocketConnection(localStorageUser.id)
     localStorage.removeItem("userData")

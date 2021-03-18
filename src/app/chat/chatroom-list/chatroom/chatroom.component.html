@@ -1,4 +1,4 @@
-<div class="chatroom-content">
+<div (click)="onResetNewMessagesAmount()" class="chatroom-content">
     <!-- TODO: chatroom image == entweder profilbild vom user recipient (wenn chatroom nur aus zwei leuten besteht) -->
     <!-- oder profilebild eines gruppen chats -->
     <div class="frame">
@@ -13,4 +13,5 @@
         {{ lastMessage.content }}
     </div>
     <div class="last-msg-date">{{lastMessage.creationDate | date }}</div>  <!-- preview der message & uhrzeit der letzten nachricht --> 
+    <div *ngIf="newMessagesAmount > 0" class="new_msg_counter"> {{ newMessagesAmount }} </div>
 </div>

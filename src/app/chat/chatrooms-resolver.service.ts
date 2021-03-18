@@ -10,7 +10,6 @@ export class ChatroomsResolverService implements Resolve<UserChatroomsResponseDa
     constructor(private chatService: ChatService) {
     }
     
-    // Eventuell auch über this.chatService.currentUser.subscribe() -> bin mir nicht sicher ob autologin() VOR RESOLVER aufgerufen wird?! (-> laut console.log messages nicht)
     currentUserData: {
         email: string,
         id: number,
@@ -19,7 +18,6 @@ export class ChatroomsResolverService implements Resolve<UserChatroomsResponseDa
       } = JSON.parse(localStorage.getItem("userData"))
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UserChatroomsResponseData> | Promise<UserChatroomsResponseData> | UserChatroomsResponseData {
-        console.log("resolve-data: ",this.chatService.getAllChatrooms(this.currentUserData.id));
         return this.chatService.getAllChatrooms(this.currentUserData.id)
     }
 

@@ -1,1 +1,7 @@
-<p>chat-feed works!</p>
+<!-- TODO: https://stackoverflow.com/questions/49869566/binding-scrolltop-directly-in-template-gives-error -->
+
+<ul class="messages-list" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+    <li class="message-item" *ngFor="let msg of messages" [ngClass]="{'recipient': msg.authorUid != currentUser.id}" [ngClass]="{'current-user': msg.authorUid == currentUser.id }">
+        <app-chat-bubble [message]="msg"> </app-chat-bubble>
+    </li>
+</ul>
