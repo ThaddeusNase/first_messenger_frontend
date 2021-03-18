@@ -1,6 +1,6 @@
 
 .chatroom-container {
-    /* max-width: 280px; */
+    max-width: 280px;
     
     /* position: relative;
     height: 100px;
@@ -16,7 +16,7 @@
 } 
 
 
-cdk-virtual-scroll-viewport {
+ul {
     top: 15px;
     height: 99%;
     width: 100%;
@@ -26,9 +26,20 @@ cdk-virtual-scroll-viewport {
     flex-direction: column;
     justify-content: center;
     list-style: none;
+    list-style: none;
 }
 
-cdk-virtual-scroll-viewport .chatroom-container {
+.room-wrapper{
+    min-width: 100%;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    contain: content;
+    box-sizing: border-box;
+    display: block;
+}
+
+ul .chatroom-container {
     position: relative;
     cursor: pointer;
     height: 100px;
@@ -40,11 +51,11 @@ cdk-virtual-scroll-viewport .chatroom-container {
     border-radius: 8px;
 }
 
-cdk-virtual-scroll-viewport .chatroom-container.router-link-active{
+ul .chatroom-container.router-link-active{
     background: rgba(90, 90, 90, 0.274);
-    
-
 }
+
+
 
 
 

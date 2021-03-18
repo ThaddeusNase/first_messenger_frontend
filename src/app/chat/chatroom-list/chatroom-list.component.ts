@@ -16,7 +16,6 @@ export class ChatroomListComponent implements OnInit {
   
   // chatroomsExist: boolean = false;
   @Input() chatrooms: Chatroom[] = [];
-  openedChatroom: Chatroom;
 
   newMessages: MessageModel[] =   []
 
@@ -36,21 +35,6 @@ export class ChatroomListComponent implements OnInit {
 
       }
     )
-  }
-
-  onOpenChatroom(i) {
-    const openedChatroom = this.chatrooms[i]
-    this.openedChatroom = new Chatroom(openedChatroom.id, openedChatroom.creationDate, openedChatroom.name, openedChatroom.member_limit)
-    this.router.navigate(["chat", openedChatroom.id])
-  }
-
-  chatroomOpenedCheck(i) {
-    // console.log("---checked chatroom: ", this.chatrooms[i]);
-    
-    if (this.openedChatroom && this.chatrooms && this.chatrooms[i].id === this.openedChatroom.id) {
-      return true 
-    }
-    return false
   }
 
 }
