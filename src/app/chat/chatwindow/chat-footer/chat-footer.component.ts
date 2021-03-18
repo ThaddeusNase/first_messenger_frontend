@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
-import { Component, ElementRef, OnInit, Output, ViewChild, EventEmitter, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, OnInit, Output, ViewChild, EventEmitter, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { error } from 'console';
@@ -116,6 +116,7 @@ export class ChatFooterComponent implements OnInit{
     }
     this.messageForm.reset()
     this.messageSent.emit(messageData)
+    
   }
 
 
