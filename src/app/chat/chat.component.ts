@@ -12,6 +12,7 @@ import { ChatroomDialogComponent } from './chatroom-dialog/chatroom-dialog.compo
 import { Chatroom } from '../shared/models/chatroom.model';
 import { MessageModel } from '../shared/models/message.model';
 import { CurrentUser } from '../shared/models/currentuser.model';
+import { ChatroomEntryModel } from '../shared/models/chatroomEntry.model';
 
 @Component({
   selector: 'app-chat',
@@ -28,7 +29,7 @@ export class ChatComponent implements OnInit {
   ){ }
 
   current_user: CurrentUser;
-  chatrooms: Chatroom[] = [];
+  chatroom_entries: ChatroomEntryModel[] = [];
    
   // TODO: soäter noch mit reactive form kompliziertere message form -> group chats , an mehereren rooms senden etc
   @ViewChild("sendMsgForm", {static: true}) sendMsgForm: NgForm; 
@@ -36,34 +37,44 @@ export class ChatComponent implements OnInit {
   ngOnInit() {
     this.authService.autologin()
     // this.sessionService.setupSocketConnection()
-    this.fetchUserChatrooms();
-
     this.authService.currentUser.subscribe(
       (user: CurrentUser) => {
         this.current_user = user
+      }
+    )
+    this.fetchChatroomsEntries();
+    console.log("--- CHAT-COMPONENT: chatroom-entries: ", this.chatroom_entries);
+
+  }
+
+  private fetchChatroomsEntries() {
+    this.activatedRoute.data.subscribe(
+      (data: Data) => {        
+        const room_entries: ChatroomEntryModel[] = data["chatroomsEntries"]
+        this.chatroom_entries = room_entries
       }
     )
 
   }
 
 
-  private fetchUserChatrooms() {
-    var tmpChatrooms: Chatroom[] = [] 
-    // MARK: Aufpassen, da hier die Chatrooms nur vom Resolver gefetched werden -> eventuell bugs beim fetchen  der chatrooms
-    // TODO: eventuell nochmal eine neue methode wo man chatrooms DIREKT von chatService.getAllChatrooms.subscribe fetched´
-    this.activatedRoute.data.subscribe(
-      (data: Data) => {
-        this.chatrooms = []
-        const chatrooms_data = data["chatrooms"]["all_user_chatrooms"];
+  // private fetchUserChatrooms() {
+  //   var tmpChatrooms: Chatroom[] = [] 
+  //   // MARK: Aufpassen, da hier die Chatrooms nur vom Resolver gefetched werden -> eventuell bugs beim fetchen  der chatrooms
+  //   // TODO: eventuell nochmal eine neue methode wo man chatrooms DIREKT von chatService.getAllChatrooms.subscribe fetched´
+  //   this.activatedRoute.data.subscribe(
+  //     (data: Data) => {
+  //       this.chatrooms = []
+  //       const chatrooms_data = data["chatroomsEntries"]["chatroom_entries"];
 
-        chatrooms_data.forEach((roomData: RoomResponseData) => {
-          const room = new Chatroom(roomData.id, new Date(roomData.creation_date), roomData.name, roomData.member_limit);
-          tmpChatrooms.push(room);
-        });
-        this.chatrooms = tmpChatrooms
-      }
-    );
-  }
+  //       chatrooms_data.forEach((roomData: RoomResponseData) => {
+  //         const room = new Chatroom(roomData.id, new Date(roomData.creation_date), roomData.name, roomData.member_limit);
+  //         tmpChatrooms.push(room);
+  //       });
+  //       this.chatrooms = tmpChatrooms
+  //     }
+  //   );
+  // }
 
   onCreateChatroom() {
     this.chatroomDialogoOpened = true
@@ -73,7 +84,8 @@ export class ChatComponent implements OnInit {
     this.chatroomDialogoOpened = false
   }
 
-  onSaveChatroom(newChatroom: Chatroom) {
+  // TODO: s. cascading EventEmitter: nicht Chatroom sondern chatroomEntryModel übergeben
+  onSaveChatroom(newChatroomEntry: ChatroomEntryModel ) {
     this.chatroomDialogoOpened = false
     // https://stackoverflow.com/questions/55369253/cdkvirtualfor-not-rendering-new-items
     // s. stackoverflow: chatroom muss mutated werden, damit verändertes == NEUE chatrooms[]- INSTANZ
@@ -81,7 +93,7 @@ export class ChatComponent implements OnInit {
     // this.chatroom.push(newChatroom) WÜRDE DAS chatrooms array nicht neu mutaten -> hence keine veränderungen im chatroom-list
 
     // TODO: new chatroom creation animation (float in von links,  alle  anderen einen nach unten)
-    this.chatrooms = [newChatroom,...this.chatrooms]
+    this.chatroom_entries = [newChatroomEntry,...this.chatroom_entries]
   }
 
 

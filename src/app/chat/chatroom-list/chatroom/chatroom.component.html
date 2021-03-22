@@ -8,10 +8,12 @@
     <!-- TODO: wenn Message heute erhalten, dann Uhrzeit anzeigen -->
     <!-- wenn Message vor mehr als 24 stunden erhalten, dann date anzeigen -->
     
-    <div class="chatroom-title"> {{ chatroom.name }} </div>
+    <div *ngIf="chatroom_entry.room.member_limit != 2" class="chatroom-title chatroom-name"> {{ chatroom_entry.room.name }} </div>
+    <div *ngIf="chatroom_entry.room.member_limit == 2" class="chatroom-title chatpartner-name"> {{ chatroom_entry.chatpartner.firstname }} {{ chatroom_entry.chatpartner.surname }} </div>
+    <div *ngIf="chatroom_entry.room.member_limit == 2 && chatroom_entry.chatpartner.firstname === null && chatroom_entry.chatpartner.surname === null" class="chatroom-title chatpartner-email"> {{ chatroom_entry.chatpartner.email }} </div>
     <div class="msg-preview">
-        {{ lastMessage.content }}
+        {{ chatroom_entry.lastMessage.content }}
     </div>
-    <div class="last-msg-date">{{lastMessage.creationDate | date }}</div>  <!-- preview der message & uhrzeit der letzten nachricht --> 
+    <div class="last-msg-date">{{chatroom_entry.lastMessage.creationDate | date }}</div>  <!-- preview der message & uhrzeit der letzten nachricht --> 
     <div *ngIf="newMessagesAmount > 0" class="new_msg_counter"> {{ newMessagesAmount }} </div>
 </div>

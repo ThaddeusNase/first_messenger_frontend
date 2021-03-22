@@ -19,7 +19,7 @@
 <div class="container">
   <div class="chatroom-container">
     <button id="create-room-button" class="btn btn-primary" (click)="onCreateChatroom()"> + </button>
-    <app-chatroom-list [chatrooms]="chatrooms"></app-chatroom-list>
+    <app-chatroom-list [chatroom_entries]="chatroom_entries"></app-chatroom-list>
   </div>
   <div class="chatwindow-container">
     <router-outlet></router-outlet>

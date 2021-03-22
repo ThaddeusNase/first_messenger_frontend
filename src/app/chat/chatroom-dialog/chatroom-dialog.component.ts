@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { exhaustMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Chatroom } from 'src/app/shared/models/chatroom.model';
+import { ChatroomEntryModel } from 'src/app/shared/models/chatroomEntry.model';
 import { CurrentUser } from 'src/app/shared/models/currentuser.model';
 import { User } from 'src/app/shared/models/user.model';
 import { FilteredUsersResponseData, UserResponseData, UsersService } from 'src/app/shared/services/users.service';
@@ -39,7 +40,7 @@ export class ChatroomDialogComponent implements OnInit {
   fetchFilteredUsersSubscribtion: Subscription
 
   @Output() closeEvent = new EventEmitter()
-  @Output() saveEvent = new EventEmitter<Chatroom>()
+  @Output() saveEvent = new EventEmitter<ChatroomEntryModel>()
 
   searchUserForm: FormGroup; 
 
@@ -92,6 +93,7 @@ export class ChatroomDialogComponent implements OnInit {
       )
     }
     
+
     // TODO: eventuell user auch mit websockets fetchen: (effizienter als via http requests?)
     getFilteredUser() {
       this.searchUserForm.get("searchTerm").valueChanges.subscribe(
@@ -176,8 +178,10 @@ export class ChatroomDialogComponent implements OnInit {
     this.closeEvent.emit()
   }
 
-  onSave(newChatroom: Chatroom) {
-    this.saveEvent.emit(newChatroom)    
+  // 
+  onSave(newChatroomEntry: ChatroomEntryModel) {
+    // TODO: nicht chatroom sondern ChatroomEntryModel übergeben
+    this.saveEvent.emit(newChatroomEntry)    
     this.closeEvent.emit()
   }
 

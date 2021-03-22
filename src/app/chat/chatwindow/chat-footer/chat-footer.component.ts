@@ -8,6 +8,7 @@ import { throwError } from 'rxjs';
 import { exhaustMap, map, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Chatroom } from 'src/app/shared/models/chatroom.model';
+import { ChatroomEntryModel } from 'src/app/shared/models/chatroomEntry.model';
 import { CurrentUser } from 'src/app/shared/models/currentuser.model';
 import { MembershipModel } from 'src/app/shared/models/membership.model';
 import { MessageModel } from 'src/app/shared/models/message.model';
@@ -26,7 +27,7 @@ export class ChatFooterComponent implements OnInit{
   errorMsg: string
 
   @Output() messageSent = new EventEmitter<MessageData>()
-  @Output() chatroomCreated = new EventEmitter<Chatroom>()
+  @Output() chatroomCreated = new EventEmitter<ChatroomEntryModel>()
 
   author: User;
   @Input() recipient: User;     // only used for the new chatroom creation (s. chatroom.name) -> TODO: später recipient-array: damit Memberships alle 
@@ -116,7 +117,7 @@ export class ChatFooterComponent implements OnInit{
     }
     this.messageForm.reset()
     this.messageSent.emit(messageData)
-    
+
   }
 
 
@@ -126,9 +127,10 @@ export class ChatFooterComponent implements OnInit{
         take(1),
         exhaustMap(
           (roomResData: RoomResponseData) => {
-            const newRoom: Chatroom = new Chatroom(roomResData.id, new Date(roomResData.creation_date), roomResData.name, roomResData.member_limit)            
-            this.chatroomCreated.emit(newRoom)    // TODO: refactor this.messageSent.emit() ist eigentlich this.chatroomCreated.emit()
             messageData["room_id"] = roomResData.id.toString()
+            const newRoom: Chatroom = new Chatroom(roomResData.id, new Date(roomResData.creation_date), roomResData.name, roomResData.member_limit)
+            const newRoomEntry: ChatroomEntryModel = this.getChatroomEntry(newRoom, messageData)
+            this.chatroomCreated.emit(newRoomEntry)    // TODO: refactor this.messageSent.emit() ist eigentlich this.chatroomCreated.emit()
             let memberIdList: number[] = this.getMemberIdList(this.groupMembers)
             return this.chatService.joinMembersToChatroom(memberIdList,roomResData.id)
           }
@@ -155,6 +157,23 @@ export class ChatFooterComponent implements OnInit{
       content: this.messageForm.controls.messageTextArea.value
     }
     return messageData  
+  }
+
+  getChatroomEntry(chatroom: Chatroom, msgData: MessageData): ChatroomEntryModel {
+    const message: MessageModel = new MessageModel(
+      msgData.id,
+      msgData.content,
+      msgData.delivery_time,
+      +msgData.room_id,
+      +msgData.author_id
+    )
+    const roomEntry: ChatroomEntryModel = new ChatroomEntryModel(
+      chatroom,
+      message,
+      chatroom.member_limit == 2 ? this.recipient : null
+    )
+    return roomEntry
+
   }
 
 

@@ -7,6 +7,8 @@ import { Socket } from 'ngx-socket-io';
 import { MessageModel } from '../shared/models/message.model';
 import { User } from '../shared/models/user.model';
 import { UserResponseData } from '../shared/services/users.service';
+import { Chatroom } from '../shared/models/chatroom.model';
+
 
 // TODO: interfaces in einer extra Datei innerhalb des chat-directory 
 // TODO:Eventuell Websocket Architecture nochmal überarbeiten s.:
@@ -53,13 +55,26 @@ export interface CommonChatpartnerMembershipsResponseData {
     common_memberships: MembershipResponseData[]
 }
 
+export interface UserChatroomEntryResData {
+    room: RoomResponseData,
+    lastMessage: MessageData,
+    chatpartner: UserResponseData | null
+}
+
+export interface UserChatroomEntriesResponseData {
+    chatroom_entries: UserChatroomEntryResData[]
+}
+
+
+
+
+
+
 @Injectable({ providedIn: "root" })
 export class ChatService {
 
-    allChatPartners = new Subject<User[]>()
-
-    // connect: SocketNameSpace
-    // private: SocketNameSpace
+    // TODO: statt newChatroomCreated => newChatroomEntryCreated = new Subject<ChatroomEntryModel>
+    newChatroomCreated = new Subject<Chatroom>()
 
     constructor(
         private http: HttpClient,
@@ -159,8 +174,6 @@ export class ChatService {
             ),
             catchError(this.handleErrors)
         )
-
-
     }
 
     getAllMembershipsForRoomId(room_id: number) {
@@ -186,6 +199,7 @@ export class ChatService {
         )
     }
 
+
     fetchCommonMembershipsOfUserAndChatPartner(current_uid: number, chatparnter_uid: number) {
         return this.http.get<CommonChatpartnerMembershipsResponseData>("http://127.0.0.1:5000/common_user_chatpartner_memberships/" + current_uid + "/" + chatparnter_uid).pipe(
             map(
@@ -195,7 +209,13 @@ export class ChatService {
             ),
             catchError(this.handleErrors)
         )
+    }
 
+
+    getUserChatroomEntries(current_uid: number) {
+        return this.http.get<UserChatroomEntriesResponseData>("http://127.0.0.1:5000/user_chatroom_list_entries/" + current_uid).pipe(
+            catchError(this.handleErrors)
+        )
     }
 
 

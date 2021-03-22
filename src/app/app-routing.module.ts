@@ -11,12 +11,13 @@ import { OpenedChatroomResolverService } from './chat/chatwindow/openedChatroom-
 import { ProfileComponent } from './profile/profile.component';
 import { ProfileResolverService } from './profile/profile-resolver.service';
 import { MessagesForOpenedChatroomService } from './chat/chatwindow/messagesForOpenedChatroom-resolver.service';
+import { ChatroomsEntriesResolver } from './chat/chatroomsEntries-resolver.service';
 
 
 const routes: Routes = [
   {path: "auth", component: AuthComponent, canActivate: [AuthFormGuardService]},
   {path: "home", component: HomeComponent},
-  {path: "chat", component: ChatComponent, canActivate: [AuthGuardService], resolve: {chatrooms: ChatroomsResolverService} , children: [
+  {path: "chat", component: ChatComponent, canActivate: [AuthGuardService], resolve: {chatroomsEntries: ChatroomsEntriesResolver} , children: [
     {path: ":room", component: ChatwindowComponent, resolve: {openedChatroomData: OpenedChatroomResolverService, messagesForRoom: MessagesForOpenedChatroomService} }
   ]},
   {path: "profile/:id", component: ProfileComponent, canActivate: [AuthGuardService], resolve: {userData: ProfileResolverService}}
