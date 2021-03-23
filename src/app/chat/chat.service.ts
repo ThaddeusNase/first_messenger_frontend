@@ -75,6 +75,7 @@ export class ChatService {
 
     // TODO: statt newChatroomCreated => newChatroomEntryCreated = new Subject<ChatroomEntryModel>
     newChatroomCreated = new Subject<Chatroom>()
+    newMessageSent = new Subject<MessageModel>()
 
     constructor(
         private http: HttpClient,

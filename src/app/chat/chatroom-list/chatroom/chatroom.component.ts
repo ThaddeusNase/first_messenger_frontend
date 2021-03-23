@@ -33,7 +33,7 @@ export class ChatroomComponent implements OnInit, OnChanges {
     this.chatService.observeNewMessageForRoom(this.chatroom_entry.room.id).subscribe(
       (msgData: MessageData) => {
         const newFetchedMessage = new MessageModel(msgData.id, msgData.content, msgData.delivery_time, +msgData.room_id, +msgData.author_id)
-        
+        this.chatService.newMessageSent.next(newFetchedMessage)
         // TODO: lastMessage handeling
         //  on click event & iwie wenn user auf chatroom-route klickt, dann auch newMessagesAmount = 0:
         // messageSend vom footer ->  lastMessage mit eigener message die man gesendet hat überschreiben

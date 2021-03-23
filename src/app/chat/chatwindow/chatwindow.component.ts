@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Data, Params, Router } from '@angular/router';
 import { timeStamp } from 'console';
 import { VirtualTimeScheduler } from 'rxjs';
@@ -9,7 +9,6 @@ import { CurrentUser } from 'src/app/shared/models/currentuser.model';
 import { UserResponseData, UsersService } from 'src/app/shared/services/users.service';
 import { ChatService, MessageData, RoomResponseData } from '../chat.service';
 import { MessageModel } from 'src/app/shared/models/message.model';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Component({
   selector: 'app-chatwindow',
@@ -18,11 +17,14 @@ import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 })
 export class ChatwindowComponent implements OnInit {
 
+  @Output() newMessageSent = new EventEmitter<MessageModel>()
+
   chatroom: Chatroom;
   chatpartner: UserResponseData;
 
   messages: MessageModel[] = []
   memberhsips: MembershipModel[] = []
+
 
 
   // TODO: in chatservice -> determin if a chatroom has more then 2 members (then its a group) 
@@ -80,16 +82,13 @@ export class ChatwindowComponent implements OnInit {
 
   // TODO: eventuell in Resolver nach url-subscriben und entsprechenden Chatroom fetchen (via Http request)
 
-
-
   
   onMessageSent(msgData: MessageData) {
     // TODO: handle messageid == null -> optional in MessageData?!
     const newMessage: MessageModel = new MessageModel(msgData.id, msgData.content, msgData.delivery_time, +msgData.room_id, +msgData.author_id)
+    // this.newMessageSent.emit(newMessage)
+    this.chatService.newMessageSent.next(newMessage)
     this.messages.push(newMessage)
-
   }
-
-  
 
 }

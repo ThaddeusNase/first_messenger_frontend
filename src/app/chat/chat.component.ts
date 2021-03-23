@@ -25,6 +25,7 @@ export class ChatComponent implements OnInit {
 
   constructor(
       private authService: AuthService, 
+      private chatService: ChatService,
       private activatedRoute: ActivatedRoute
   ){ }
 
@@ -42,6 +43,7 @@ export class ChatComponent implements OnInit {
         this.current_user = user
       }
     )
+    this.observeNewMessageSent()
     this.fetchChatroomsEntries();
     console.log("--- CHAT-COMPONENT: chatroom-entries: ", this.chatroom_entries);
 
@@ -75,6 +77,26 @@ export class ChatComponent implements OnInit {
   //     }
   //   );
   // }
+
+  observeNewMessageSent() {
+    this.chatService.newMessageSent.subscribe(
+      (msg: MessageModel) =>  {
+        console.log("executed");
+    
+        this.chatroom_entries.map(
+          (entry: ChatroomEntryModel) => {
+            if (entry.room.id === msg.chatroomId) {
+              entry.lastMessage = msg
+            }
+          }
+        )
+        console.log("---", this.chatroom_entries);
+      }
+    )
+    
+
+    
+  }
 
   onCreateChatroom() {
     this.chatroomDialogoOpened = true
