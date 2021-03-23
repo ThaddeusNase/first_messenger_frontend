@@ -7,8 +7,9 @@ import { Chatroom } from 'src/app/shared/models/chatroom.model';
 import { MembershipModel } from 'src/app/shared/models/membership.model';
 import { CurrentUser } from 'src/app/shared/models/currentuser.model';
 import { UserResponseData, UsersService } from 'src/app/shared/services/users.service';
-import { ChatService, MessageData, RoomResponseData } from '../chat.service';
+import { ChatService, ChatWindowHeaderInfoResponseData, MessageData, RoomResponseData } from '../chat.service';
 import { MessageModel } from 'src/app/shared/models/message.model';
+import { User } from 'src/app/shared/models/user.model';
 
 @Component({
   selector: 'app-chatwindow',
@@ -20,7 +21,7 @@ export class ChatwindowComponent implements OnInit {
   @Output() newMessageSent = new EventEmitter<MessageModel>()
 
   chatroom: Chatroom;
-  chatpartner: UserResponseData;
+  chatpartner: User;
 
   messages: MessageModel[] = []
   memberhsips: MembershipModel[] = []
@@ -46,8 +47,13 @@ export class ChatwindowComponent implements OnInit {
   fetchResolvedData() {
     this.activatedRoute.data.subscribe(
       (data: Data) => {
-        const roomResData: RoomResponseData = data["openedChatroomData"]
-        const chatroomObj: Chatroom = new Chatroom(roomResData.id, new Date(roomResData.creation_date), roomResData.name, roomResData.member_limit)
+        const roomResData: ChatWindowHeaderInfoResponseData = data["openedChatroomData"]
+        const chatroomObj: Chatroom = new Chatroom(roomResData.room.id, new Date(roomResData.room.creation_date), roomResData.room.name, roomResData.room.member_limit)
+        if (chatroomObj.member_limit === 2) {
+          const partner: User = new User(roomResData.chatpartner.uid.toString(), roomResData.chatpartner.email, roomResData.chatpartner.first_name, roomResData.chatpartner.surname, roomResData.chatpartner.bio)
+          this.chatpartner = partner
+        }
+        // TODO: else chatpartner Array (eventuell nochmal UserChatroomWindowHeaderResource im flask backend überarbeiten )
 
         const messagesForRoom: MessageModel[] = data["messagesForRoom"]
 

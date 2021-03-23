@@ -45,8 +45,6 @@ export class ChatComponent implements OnInit {
     )
     this.observeNewMessageSent()
     this.fetchChatroomsEntries();
-    console.log("--- CHAT-COMPONENT: chatroom-entries: ", this.chatroom_entries);
-
   }
 
   private fetchChatroomsEntries() {

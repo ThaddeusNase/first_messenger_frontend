@@ -65,6 +65,11 @@ export interface UserChatroomEntriesResponseData {
     chatroom_entries: UserChatroomEntryResData[]
 }
 
+export interface ChatWindowHeaderInfoResponseData {
+    room: RoomResponseData,
+    chatpartner: UserResponseData
+}
+
 
 
 
@@ -249,6 +254,13 @@ export class ChatService {
     }
 
 
+    fetchChatWindowHeaderInformation(current_uid:number , room_id:number) {
+        return this.http.get<ChatWindowHeaderInfoResponseData>(`http://127.0.0.1:5000/user_chatroom_window_header/${current_uid}/for_room/${room_id}`).pipe(
+            catchError(this.handleErrors)
+        )
+    }
+
+
 
     handleErrors(errorResponse: HttpErrorResponse) {
 
@@ -257,10 +269,9 @@ export class ChatService {
             // console.error("---", errorResponse)
             return throwError(errorResponse.error.message)
         }
-
         switch (errorResponse.error.message) {
             case "USER_DOES_NOT_EXIST":
-                errorMsg = "the joining user doesn't exist"
+                errorMsg = "the user doesn't exist"
                 break;
             case "USER_ALREADY_MEMBER":
                 errorMsg = "user is already of this Group"
@@ -276,6 +287,8 @@ export class ChatService {
                 break;
             case "NO_COMMON_MEMBERSHIPS_FOUND":
                 errorMsg = "currentUser and chatpartner don't have any common chatrooms"
+            case "ROOM_MEMBERLIMIT_IS_NOT_TWO":
+                errorMsg = "room memberlimit != 2 -> room is probably a group_chat(?)"
         }
         return throwError(errorMsg)
     }

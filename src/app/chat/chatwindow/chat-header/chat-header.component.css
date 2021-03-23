@@ -1,0 +1,22 @@
+.header-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    /* background: rgb(221, 221, 221); */
+}
+
+a {
+    color: inherit;
+}
+
+app-user-entry {
+    margin-top: 2px;
+    padding: 8px;
+    display: inline-block;
+}
+
+app-user-entry:hover {
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgb(163, 163, 163);;
+}

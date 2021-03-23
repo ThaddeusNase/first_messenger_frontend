@@ -6,7 +6,7 @@ import { Chatroom } from 'src/app/shared/models/chatroom.model';
 import { MembershipModel } from 'src/app/shared/models/membership.model';
 import { CurrentUser } from 'src/app/shared/models/currentuser.model';
 import { UserResponseData, UsersService } from 'src/app/shared/services/users.service';
-import { ChatService, MembershipResponseData, MembershipsResponseData, RoomResponseData } from '../chat.service';
+import { ChatService, ChatWindowHeaderInfoResponseData, MembershipResponseData, MembershipsResponseData, RoomResponseData } from '../chat.service';
 
 @Injectable({providedIn: "root"})
 export class OpenedChatroomResolverService implements Resolve<any> {
@@ -23,11 +23,16 @@ export class OpenedChatroomResolverService implements Resolve<any> {
         _expirationDate: string
       } = JSON.parse(localStorage.getItem("userData"))
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) : Observable<any> | RoomResponseData  {
-        // route.params.id == string
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) : Observable<any> | ChatWindowHeaderInfoResponseData  {
+        const currentUserData: {
+            email: string,
+            id: number,
+            _token: string,
+            _expirationDate: string
+          } = JSON.parse(localStorage.getItem("userData"))
         
         const room_id = route.params["room"];
-        return this.chatService.getChatroomById(room_id)
+        return this.chatService.fetchChatWindowHeaderInformation(currentUserData.id, room_id)
 
 
 

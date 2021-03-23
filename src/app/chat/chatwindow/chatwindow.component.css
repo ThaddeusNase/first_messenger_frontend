@@ -5,8 +5,10 @@
 .window-header {
     position: fixed;
     height: 70px;
-    width: 100%;
-    background-color: brown;
+    left: 30%;
+    right: 0px;
+    /* width: 100%; */
+    background: rgb(221, 221, 221);
 
 }
 

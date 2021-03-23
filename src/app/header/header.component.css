@@ -4,7 +4,9 @@
     /* position: fixed;  */
     top: 0;
     width: 100%;
-    background: white 
+    background: white;
+    border-bottom: 1px solid rgb(153, 153, 153);
+    
     /* background: #303030;  */
 }
 

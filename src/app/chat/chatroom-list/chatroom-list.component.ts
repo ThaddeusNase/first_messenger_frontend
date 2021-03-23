@@ -31,8 +31,6 @@ export class ChatroomListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log("--- CHATROOM-LIST-COMPONENT: chatroom-entries: ", this.chatroom_entries);
-
     // TODO: mit observable erstetzen und besseres handeleing -> message jeweiligem chatroom/chatfeed zuordnen etc
     // TODO: MACHT ES NICHT MEHR SINN DIESE METHODE DANN AUCH IN DER CHAT.COMPONENT.TS ZU IMPLEMENTIEREN?!
     this.chatService.observeMessage().subscribe(
