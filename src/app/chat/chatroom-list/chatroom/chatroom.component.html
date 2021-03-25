@@ -7,13 +7,14 @@
     
     <!-- TODO: wenn Message heute erhalten, dann Uhrzeit anzeigen -->
     <!-- wenn Message vor mehr als 24 stunden erhalten, dann date anzeigen -->
-    
-    <div *ngIf="chatroom_entry.room.member_limit != 2" class="chatroom-title chatroom-name"> {{ chatroom_entry.room.name }} </div>
+                                                                    
+    <div *ngIf="chatroom_entry.room.member_limit != 2" class="chatroom-title chatroom-name"> {{(chatroom_entry.room.name.length>20)? (chatroom_entry.room.name|slice:0:20)  + '..':(chatroom_entry.room.name) }} </div>
+    <!-- TODO: bessere {{ (str.length>6)? (str | slice:0:6)+'..':(str) }} LOGIK für firstname & lastname! --> 
     <div *ngIf="chatroom_entry.room.member_limit == 2" class="chatroom-title chatpartner-name"> {{ chatroom_entry.chatpartner.firstname }} {{ chatroom_entry.chatpartner.surname }} </div>
     <div *ngIf="chatroom_entry.room.member_limit == 2 && chatroom_entry.chatpartner.firstname === null && chatroom_entry.chatpartner.surname === null" class="chatroom-title chatpartner-email"> {{ chatroom_entry.chatpartner.email }} </div>
     <div class="msg-preview">
-        {{ chatroom_entry.lastMessage.content }}
+        {{(chatroom_entry.lastMessage.content.length>9)? (chatroom_entry.lastMessage.content | slice:0:9)+'...':(chatroom_entry.lastMessage.content) }}
     </div>
-    <div class="last-msg-date">{{chatroom_entry.lastMessage.creationDate | date }}</div>  <!-- preview der message & uhrzeit der letzten nachricht --> 
+    <div class="last-msg-date">{{chatroom_entry.lastMessage.creationDate | date  }}</div>  <!-- preview der message & uhrzeit der letzten nachricht --> 
     <div *ngIf="newMessagesAmount > 0" class="new_msg_counter"> {{ newMessagesAmount }} </div>
 </div>

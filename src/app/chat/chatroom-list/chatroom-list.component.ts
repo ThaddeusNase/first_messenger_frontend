@@ -52,6 +52,10 @@ export class ChatroomListComponent implements OnInit {
               // this.chatService.newChatroomCreated.next(newRoomEntry)
             }
           )
+        } else {
+          // * WENN CHATROOM BEREITS EXISTIERT -> chatroom_entries ORDER BY lastMessage.creation _date* 
+          
+
         }
       }
     )

@@ -51,7 +51,14 @@ export class ChatComponent implements OnInit {
     this.activatedRoute.data.subscribe(
       (data: Data) => {        
         const room_entries: ChatroomEntryModel[] = data["chatroomsEntries"]
+        console.log(room_entries);
         this.chatroom_entries = room_entries
+        
+        this.chatroom_entries = this.chatroom_entries.sort(
+          (a: ChatroomEntryModel, b: ChatroomEntryModel) => {
+            return b.lastMessage.creationDate.getTime() - a.lastMessage.creationDate.getTime()
+          }
+        )
       }
     )
 
@@ -84,8 +91,14 @@ export class ChatComponent implements OnInit {
         this.chatroom_entries.map(
           (entry: ChatroomEntryModel) => {
             if (entry.room.id === msg.chatroomId) {
+              
               entry.lastMessage = msg
             }
+          }
+        )
+        this.chatroom_entries = this.chatroom_entries.sort(
+          (a: ChatroomEntryModel, b: ChatroomEntryModel) => {
+            return b.lastMessage.creationDate.getTime() - a.lastMessage.creationDate.getTime()
           }
         )
         console.log("---", this.chatroom_entries);
