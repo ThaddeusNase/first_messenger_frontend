@@ -27,6 +27,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
 import { ChatBubbleComponent } from './chat/chatwindow/chat-feed/chat-bubble/chat-bubble.component';
 import { AutoLineBreakDirective } from './shared/directives/autoLineBreak.directive';
+import { EditProfileDialogComponent } from './profile/edit-profile-dialog/edit-profile-dialog.component';
 // import { ScrollingModule }
 
 
@@ -59,7 +60,8 @@ const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
     ProfileDropdownMenuComponent,
     ProfileComponent,
     ChatBubbleComponent,
-    AutoLineBreakDirective
+    AutoLineBreakDirective,
+    EditProfileDialogComponent
   ],
   imports: [
     BrowserModule,

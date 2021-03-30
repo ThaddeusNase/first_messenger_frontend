@@ -227,7 +227,6 @@ export class ChatService {
 
     // TODO: RecipientUser-Object statt recipientEmail 
     sendMessage(msg: MessageData) {
-        console.log("sendMessage() EXECUTED");
         this.socket.emit("private_message", msg)
     }
 

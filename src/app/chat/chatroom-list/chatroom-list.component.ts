@@ -53,8 +53,12 @@ export class ChatroomListComponent implements OnInit {
             }
           )
         } else {
-          // * WENN CHATROOM BEREITS EXISTIERT -> chatroom_entries ORDER BY lastMessage.creation _date* 
+          console.log("observeMessage  executed!!! TODO: nochaml anschauen!!!!");
           
+
+          
+          // * WENN CHATROOM BEREITS EXISTIERT -> chatroom_entries ORDER BY lastMessage.creation _date* 
+
 
         }
       }

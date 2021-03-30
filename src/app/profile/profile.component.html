@@ -1,25 +1,22 @@
+<div class="edit-profile">
+    <app-edit-profile-dialog (userUpdated)="onUpdateUser($event)" (closeEditProfile)="editMode = false" [user]="user" *ngIf="editMode"> </app-edit-profile-dialog>
+</div>
+
 <img class="profile-image" src="/assets/img/avatardefault.png" alt="profile-image">
 <!-- <div> {{ user.firstName }} {{user.surname}} </div> -->
 <!-- <div class="user-email"> email {{ user.email }} </div> -->
-<div class="profile-info-box" *ngIf="!isCurrentUser">
+<div class="profile-info-box">
     <div *ngIf="user.firstname || user.surname" class="user-name"> {{ user.firstname }} {{ user.surname }}</div>
-    <div class="user-bio" > Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae, vel reiciendis? Sit ipsam corrupti totam. Quam atque assumenda sequi cum quae impedit laboriosam at. Accusantium cupiditate deleniti vitae voluptate aperiam.</div>
+    <div class="user-bio" > {{ user.bio }}</div>
 </div>
 
 <div class="profile-actions">
-    <button type="button" class="btn btn-light" *ngIf="isCurrentUser && !editMode" (click)="onEditProfile()">  *EditProfile* </button>
-    <button form="edit-profile-form" class="btn btn-primary submit-btn" *ngIf="isCurrentUser && editMode"> Save </button>
+    <button type="button" class="btn btn-light" *ngIf="isCurrentUser" (click)="onEditProfile()"> *EditProfile* </button>
+    <!-- <button form="edit-profile-form" class="btn btn-primary submit-btn" *ngIf="isCurrentUser && editMode"> Save </button> -->
     <button type="button" class="btn btn-primary" *ngIf="!isCurrentUser" (click)="onAddContact()"> *AddContact*</button>
     <button type="button" class="btn btn-secondary">*ContactAmount* </button> <!-- TODO: chatroom-dialog component ausklappen TODO: fetch amount of cantacts of an user -->
 </div>
 
-<form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()" id="edit-profile-form" *ngIf="isCurrentUser">
-    <!-- TODO: [ngclass]="{'invisible-input': !user.firstname}"   {.invisible-input {display: none} } -->
-    <input type="text" class="form-control user-name" formControlName="firstName" placeholder="First Name here.." [ngClass]="{'hide-control': !user.firstname}" appAutowidth >
-    <input type="text" class="form-control user-surname" formControlName="surname" placeholder="Surname here..." [ngClass]="{'hide-control': !user.surname}" appAutowidth >
-    <!-- TODO bio mit textarea ersetzen -->
-    <input type="text" class="form-control user-bio" formControlName="bio" placeholder="Bio here..." [ngClass]="{'hide-control': !user.bio}" size="user.bio.length" appAutowidth>
-        <!-- MARK: submit button outside form: https://stackoverflow.com/questions/38054631/angular2-validate-and-submit-form-from-outside -->
-</form>
+
 
 

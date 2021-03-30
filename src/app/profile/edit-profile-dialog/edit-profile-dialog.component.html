@@ -1,0 +1,17 @@
+
+<div class="backdrop" (click)="onClose()"></div>
+<div class="edit-container">
+    <div class="cancel-btn-container">
+        <button class="cancel-btn" (click)="onClose()"> Cancel </button>
+    </div>
+    <h4 class="edit-subtitle"> Edit your profile: </h4>
+    <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()" class="edit-form" id="edit-profile-form">
+        <!-- TODO: [ngclass]="{'invisible-input': !user.firstname}"   {.invisible-input {display: none} } -->
+        <input type="text" class="form-control user-name" formControlName="firstName" placeholder="First Name here.." >
+        <input type="text" class="form-control user-surname" formControlName="surname" placeholder="Surname here...">
+        <!-- TODO bio mit textarea ersetzen -->
+        <input type="text" class="form-control user-bio" formControlName="bio" placeholder="Bio here..." [ngClass]="{'hide-control': !user.bio}" size="user.bio.length">
+        <button class="btn btn-primary" type="submit"> Save </button>
+            <!-- MARK: submit button outside form: https://stackoverflow.com/questions/38054631/angular2-validate-and-submit-form-from-outside -->
+    </form>
+</div>

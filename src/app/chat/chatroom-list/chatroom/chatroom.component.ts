@@ -32,7 +32,7 @@ export class ChatroomComponent implements OnInit, OnChanges {
     this.lastMessage = new MessageModel(1, "ey jo was geht bei dir brooo", new Date(), 1, 1)
     this.chatService.observeNewMessageForRoom(this.chatroom_entry.room.id).subscribe(
       (msgData: MessageData) => {
-        const newFetchedMessage = new MessageModel(msgData.id, msgData.content, msgData.delivery_time, +msgData.room_id, +msgData.author_id)
+        const newFetchedMessage = new MessageModel(msgData.id, msgData.content, new Date(), +msgData.room_id, +msgData.author_id)
         this.chatService.newMessageSent.next(newFetchedMessage)
         // TODO: lastMessage handeling
         //  on click event & iwie wenn user auf chatroom-route klickt, dann auch newMessagesAmount = 0:

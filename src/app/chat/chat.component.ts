@@ -6,7 +6,7 @@ import { sample } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { SessionResponseData, SessionService } from '../auth/session.service';
 import { UsersService } from '../shared/services/users.service';
-import { ChatService, RoomResponseData, UserChatroomsResponseData } from './chat.service';
+import { ChatService, MessageData, RoomResponseData, UserChatroomsResponseData } from './chat.service';
 // import { ChatroomDialogComponent } from './chatroom-dialog/chatroom-dialog.component';
 import { ChatroomDialogComponent } from './chatroom-dialog/chatroom-dialog.component';
 import { Chatroom } from '../shared/models/chatroom.model';
@@ -44,6 +44,7 @@ export class ChatComponent implements OnInit {
       }
     )
     this.observeNewMessageSent()
+    this.observeNewMessageReceived()
     this.fetchChatroomsEntries();
   }
 
@@ -51,7 +52,6 @@ export class ChatComponent implements OnInit {
     this.activatedRoute.data.subscribe(
       (data: Data) => {        
         const room_entries: ChatroomEntryModel[] = data["chatroomsEntries"]
-        console.log(room_entries);
         this.chatroom_entries = room_entries
         
         this.chatroom_entries = this.chatroom_entries.sort(
@@ -61,37 +61,15 @@ export class ChatComponent implements OnInit {
         )
       }
     )
-
   }
 
-
-  // private fetchUserChatrooms() {
-  //   var tmpChatrooms: Chatroom[] = [] 
-  //   // MARK: Aufpassen, da hier die Chatrooms nur vom Resolver gefetched werden -> eventuell bugs beim fetchen  der chatrooms
-  //   // TODO: eventuell nochmal eine neue methode wo man chatrooms DIREKT von chatService.getAllChatrooms.subscribe fetched´
-  //   this.activatedRoute.data.subscribe(
-  //     (data: Data) => {
-  //       this.chatrooms = []
-  //       const chatrooms_data = data["chatroomsEntries"]["chatroom_entries"];
-
-  //       chatrooms_data.forEach((roomData: RoomResponseData) => {
-  //         const room = new Chatroom(roomData.id, new Date(roomData.creation_date), roomData.name, roomData.member_limit);
-  //         tmpChatrooms.push(room);
-  //       });
-  //       this.chatrooms = tmpChatrooms
-  //     }
-  //   );
-  // }
-
-  observeNewMessageSent() {
-    this.chatService.newMessageSent.subscribe(
-      (msg: MessageModel) =>  {
-        console.log("executed");
-    
+  private observeNewMessageReceived() {
+    this.chatService.observeMessage().subscribe(
+      (msgData: MessageData) => {
+        const msg: MessageModel = new MessageModel(msgData.id, msgData.content, new Date(), +msgData.room_id, +msgData.author_id)
         this.chatroom_entries.map(
           (entry: ChatroomEntryModel) => {
             if (entry.room.id === msg.chatroomId) {
-              
               entry.lastMessage = msg
             }
           }
@@ -101,12 +79,41 @@ export class ChatComponent implements OnInit {
             return b.lastMessage.creationDate.getTime() - a.lastMessage.creationDate.getTime()
           }
         )
-        console.log("---", this.chatroom_entries);
       }
     )
-    
+  }
 
+  // this.chatService.observeMessage().subscribe(
+  //   (msgData: MessageData) => {
+  //     this.chatroom_entries = this.chatroom_entries.sort(
+  //       (a: ChatroomEntryModel, b: ChatroomEntryModel) => {
+  //         return b.lastMessage.creationDate.getTime() - a.lastMessage.creationDate.getTime()
+  //       }
+  //     )
+
+  //   }
+  //   // frage ist, ob die neue message überhaupt in lastmessage übernommen wurde und somit auch danach gesorted werden kann
+  //   console.log("chatroom_entries after observeMessage executed: ", this.chatroom_entries)
+  // )
+
+  observeNewMessageSent() {
+    this.chatService.newMessageSent.subscribe(
+      (msg: MessageModel) =>  {
     
+        this.chatroom_entries.map(
+          (entry: ChatroomEntryModel) => {
+            if (entry.room.id === msg.chatroomId) {
+              entry.lastMessage = msg
+            }
+          }
+        )
+        this.chatroom_entries = this.chatroom_entries.sort(
+          (a: ChatroomEntryModel, b: ChatroomEntryModel) => {
+            return b.lastMessage.creationDate.getTime() - a.lastMessage.creationDate.getTime()
+          }
+        )
+      }
+    )
   }
 
   onCreateChatroom() {

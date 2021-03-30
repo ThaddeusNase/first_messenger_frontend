@@ -20,14 +20,10 @@ export class ProfileComponent implements OnInit {
 
   editMode = false
 
-  editProfileForm: FormGroup
 
   constructor(
     private authService: AuthService,
-    private usersService: UsersService,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder,
-    private el: ElementRef
   ) {}
 
 
@@ -41,32 +37,10 @@ export class ProfileComponent implements OnInit {
         this.isCurrentUser = this.user.id === user.id ? true : false
       }
     )
-
-    if (this.isCurrentUser) {
-      this.initEditProfileForm()
-    }
   }
 
 
   // TODO: security check: user muss eingeloggt sein 
-  initEditProfileForm() {
-    
-    this.editProfileForm = this.formBuilder.group({
-      "firstName": [{value: this.user.firstname, disabled: true}],
-      "surname": [{value: this.user.surname, disabled: true}],
-      // TODO: bio mit textarea ersetzen
-      "bio": [{value: this.user.bio, disabled: true}],
-    })
-    // let controls = this.el.nativeElement.querySelectorAll(".form-control")
-    // for(let control of controls) {
-    //   console.log("111",control.value);
-      
-    //   if (!control.value) {
-    //     control.classList.add("hide-control")
-    //   } 
-
-    // }
-  }
 
 
   fetchUser() {
@@ -89,60 +63,23 @@ export class ProfileComponent implements OnInit {
     )
   }
 
-
+  onUpdateUser(user: User) {    
+    this.user = user
+  }
   onEditProfile() {
     this.editMode = true
-    this.editProfileForm.controls["firstName"].enable()
-    this.editProfileForm.controls["surname"].enable()
-    this.editProfileForm.controls["bio"].enable()
+    // this.editProfileForm.controls["firstName"].enable()
+    // this.editProfileForm.controls["surname"].enable()
+    // this.editProfileForm.controls["bio"].enable()
 
-    let controls = this.el.nativeElement.querySelectorAll(".form-control")
-    for (let control of controls ) {
-      control.classList.remove("hide-control")
-      control.classList.add("show-control")
-      control.setAttribute("size", 20)
-    }
+    // let controls = this.el.nativeElement.querySelectorAll(".form-control")
+    // for (let control of controls ) {
+    //   control.classList.remove("hide-control")
+    //   control.classList.add("show-control")
+    //   control.setAttribute("size", 20)
+    // }
   }
 
-  onSubmit() {
-    this.handleHideControl()
-    this.updateUser()
-  }
-
-  updateUser() {
-    // TODO: const email = this.editProfileForm.controls.email.value ? this.editProfileForm.controls.email.value : this.user.email
-    const surname = this.editProfileForm.controls.surname.value ? this.editProfileForm.controls.surname.value : this.user.surname
-    const firstname = this.editProfileForm.controls.firstName.value ? this.editProfileForm.controls.firstName.value : this.user.firstname
-    const bio = this.editProfileForm.controls.bio.value ? this.editProfileForm.controls.bio.value : this.user.bio
-
-    const updatedUser = new User(this.user.id, this.user.email, firstname, surname ,bio)    
-    this.usersService.updateUser(updatedUser).subscribe(
-      (userResData: UserResponseData) => {
-        console.log(userResData);
-      },
-      (error: Error) => {
-        console.error(error);
-        // TODO: this.error = this.error.message
-      }
-    )
-  }
-
-  handleHideControl() {
-    this.editProfileForm.controls["firstName"].disable()
-    this.editProfileForm.controls["surname"].disable()
-    this.editProfileForm.controls["bio"].disable()
-    this.editMode = false
-
-    let controls = this.el.nativeElement.querySelectorAll(".form-control")
-    for (let control of controls ) {
-      if (!control.value) {
-        control.classList.add("hide-control")
-      } else {
-        control.setAttribute("size", control.value.length)
-      }
-    }
-
-  }
   
   
   onAddContact() {

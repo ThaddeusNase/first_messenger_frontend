@@ -1,0 +1,58 @@
+.backdrop {
+    /* position: absolute; */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.65);
+    z-index: 50;
+}
+
+.cancel-btn-container {
+    text-align: right;
+    margin-right: 20px;
+    margin-top: 10px;
+
+}
+.cancel-btn {
+    /* margin-right: 20px; */
+    border: none;
+    background-color: white;    
+}
+
+.edit-container {
+    margin-top: 15%;
+    position: relative;
+    padding-bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    /* margin-top: 200px; */
+    width: 50%;
+    z-index: 100;
+    border: 1px solid transparent;
+    background-color: white; 
+    border-radius: 20px;
+}
+
+.edit-subtitle {
+    font-weight: bolder;
+    margin-top: 10px;
+    margin-left: 10%;
+}
+
+.edit-form {
+    margin: 10px 10%; 
+}
+
+input {
+    margin-top: 10px;
+    display: inline-block;
+    /* margin: 10px; */
+    /* margin-right: 10px; */
+    /* width: 80%; */
+}
+
+button[type="submit"] {
+    margin-top: 10px;
+}
