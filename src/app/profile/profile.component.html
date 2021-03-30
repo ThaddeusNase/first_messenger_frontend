@@ -11,9 +11,9 @@
 </div>
 
 <div class="profile-actions">
-    <button type="button" class="btn btn-light" *ngIf="isCurrentUser" (click)="onEditProfile()"> *EditProfile* </button>
+    <button type="button" class="btn btn-light" *ngIf="user.id === currentUser.id" (click)="onEditProfile()"> *EditProfile* </button>
     <!-- <button form="edit-profile-form" class="btn btn-primary submit-btn" *ngIf="isCurrentUser && editMode"> Save </button> -->
-    <button type="button" class="btn btn-primary" *ngIf="!isCurrentUser" (click)="onAddContact()"> *AddContact*</button>
+    <button type="button" class="btn btn-primary" *ngIf="user.id !== currentUser.id" (click)="onAddContact()"> *AddContact*</button>
     <button type="button" class="btn btn-secondary">*ContactAmount* </button> <!-- TODO: chatroom-dialog component ausklappen TODO: fetch amount of cantacts of an user -->
 </div>
 

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnChanges, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Data } from '@angular/router';
 import { throwError } from 'rxjs';
@@ -12,11 +12,11 @@ import { UserResponseData, UsersService } from '../shared/services/users.service
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit{
 
   error: string
   user: User;
-  isCurrentUser = false
+  currentUser: CurrentUser
 
   editMode = false
 
@@ -34,10 +34,13 @@ export class ProfileComponent implements OnInit {
     this.authService.currentUser.subscribe(
       (user: CurrentUser) => {
         // s. profile.component.html currentUser wird hier bereits gefetched
-        this.isCurrentUser = this.user.id === user.id ? true : false
+        this.currentUser = user
       }
     )
   }
+
+
+
 
 
   // TODO: security check: user muss eingeloggt sein 
